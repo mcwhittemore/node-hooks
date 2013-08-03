@@ -1,0 +1,5 @@
+
+> git-test@0.0.1 test /Users/mcw/Documents/Projects/git-test
+> echo {\"hello\": \"matthew\"}
+
+{"hello": "matthew"}
