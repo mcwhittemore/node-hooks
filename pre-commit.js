@@ -8,8 +8,12 @@ var oldTestReport = false;
 
 
 
-var run = function(){
-	runTests();
+var start = function(){
+	
+	exec("git stash -q --keep-index", function(){
+		runTests();
+	});
+
 	loadTestReport();
 }
 
@@ -18,7 +22,7 @@ var runTests = function(){
 		var testJson = JSON.parse(stderr);
 		
 		if(testJson.stats.failures>0){
-			process.exit(1);
+			stop(1);
 		}
 
 		newTestReport = testJsonToTestReport(testJson);
@@ -38,7 +42,7 @@ var loadTestReport = function(){
 			}
 			else{
 				console.error("FILE READ ERROR WITH `test-report.json`", err);
-				process.exit(1);
+				stop(1);
 			}
 		}
 		else{
@@ -51,7 +55,7 @@ var loadTestReport = function(){
 				}
 				catch(err){
 					console.error("JSON PARSE ERROR with `test-report.json`", err);
-					process.exit(1);
+					stop(1);
 				}
 			}
 		}
@@ -75,7 +79,7 @@ var testJsonToTestReport = function(test_report){
 		}
 		else{
 			console.error("DUPLICATED TEST", test_report.tests[iTests].fullTitle);
-			process.exit(1);
+			stop(1);
 		}
 	}
 
@@ -139,12 +143,12 @@ var compareReports = function(){
 			}
 		}
 
-		process.exit(1);
+		stop(1);
 	}
 
 	if(failed){
 		console.error("Your commit has not been accepted. See above for details.");
-		process.exit(1);
+		stop(1);
 	}
 	else{
 		saveTestReport();
@@ -156,11 +160,17 @@ var saveTestReport = function(){
 	fs.writeFile(reportFile, JSON.stringify(newTestReport), function(err){
 		if(err){
 			console.error("FAILED TO SAVE TEST REPORT", err);
-			process.exit(1);
+			stop(1);
 		}
 		else{
-			process.exit(0);
+			stop(0);
 		}
+	});
+}
+
+var stop = function(exit_code){
+	exec("git stash pop -q", function(){
+		process.exit(exit_code);
 	});
 }
 
