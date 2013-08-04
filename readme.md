@@ -1,6 +1,6 @@
-# Pre-Commit
+# Node Hooks
 
-This is a small nodejs, mocha, git script that validates your tests before letting you commit.
+A framework for writing and organizing git hooks in node.js 
 
 ## TODO
 

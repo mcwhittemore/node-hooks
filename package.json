@@ -12,7 +12,7 @@
   },
   "scripts": {
     "test": "mocha",
-    "install": "node install.js"
+    "install": "node ./hooks/install.js"
   },
   "repository": {
     "type": "git",
