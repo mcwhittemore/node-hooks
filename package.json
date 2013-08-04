@@ -1,8 +1,30 @@
 {
-  "name": "git-test",
-  "version": "0.0.1",
-  "private": true,
-  "dependencies": {
+  "name": "node-hooks",
+  "version": "0.0.0",
+  "description": "A framework for writing and organizing git hooks in node.js",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {},
+  "devDependencies": {
     "mocha": "~1.12.0"
+  },
+  "scripts": {
+    "test": "mocha",
+    "install": "node install.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mcwhittemore/node-hooks.git"
+  },
+  "keywords": [
+    "git",
+    "hooks"
+  ],
+  "author": "Matthew Chase Whittemore <mcwhittemore@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mcwhittemore/node-hooks/issues"
   }
 }

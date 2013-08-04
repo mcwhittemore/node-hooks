@@ -1,0 +1,1 @@
+console.log("YEA, I'm a installer")
