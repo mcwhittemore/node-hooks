@@ -175,4 +175,4 @@ var stop = function(exit_code){
 }
 
 
-run();
+start();
