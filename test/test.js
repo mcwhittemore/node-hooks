@@ -5,7 +5,7 @@ it.skip("this too should be skipped", function(){
 });
 
 describe("hmmmmm", function(){
-	it("thats sweet", function(){
+	it.skip("thats sweet", function(){
 
 	})
 })
