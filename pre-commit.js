@@ -1,6 +1,8 @@
 var exec = require('child_process').exec;
 var fs = require('fs');
 
+var reportFile = __dirname+"/test/test-report.json";
+
 
 var newTests = false;
 var oldTests = false;
@@ -37,7 +39,17 @@ var toDictionary = function(test_report){
 }
 
 var save = function(){
-	process.exit(0);
+	fs.writeFile(reportFile, JSON.stringify(newTests), function(err){
+
+		if(err){
+			console.error("FAILED TO SAVE TEST REPORT", err);
+			process.exit(1);
+		}
+		else{
+			process.exit(0);
+		}
+
+	});
 }
 
 var judge = function(){
@@ -107,7 +119,7 @@ exec("./node_modules/mocha/bin/mocha --reporter json", function(err, stderr, std
 });
 
 
-fs.readFile(__dirname+"/test/test-report.json", function(err, data){
+fs.readFile(reportFile, function(err, data){
 
 	if(err){
 		if(err.code=="ENOENT"){
