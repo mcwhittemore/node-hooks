@@ -3,8 +3,8 @@ var fs = require('fs');
 
 var reportFile = __dirname+"/test/test-report.json";
 
-var newTests = false;
-var oldTests = false;
+var newTestReport = false;
+var oldTestReport = false;
 
 
 
@@ -21,9 +21,9 @@ var runTests = function(){
 			process.exit(1);
 		}
 
-		newTests = testJsonToTestReport(testJson);
+		newTestReport = testJsonToTestReport(testJson);
 
-		if(oldTests!=false){
+		if(oldTestReport!=false){
 			compareReports();
 		}
 	});
@@ -34,7 +34,7 @@ var loadTestReport = function(){
 
 		if(err){
 			if(err.code=="ENOENT"){
-				oldTests = {};
+				oldTestReport = {};
 			}
 			else{
 				console.error("FILE READ ERROR WITH `test-report.json`", err);
@@ -43,11 +43,11 @@ var loadTestReport = function(){
 		}
 		else{
 			if(data==""){
-				oldTests = {};
+				oldTestReport = {};
 			}
 			else{
 				try{
-					oldTests=JSON.parse(data);
+					oldTestReport=JSON.parse(data);
 				}
 				catch(err){
 					console.error("JSON PARSE ERROR with `test-report.json`", err);
@@ -56,7 +56,7 @@ var loadTestReport = function(){
 			}
 		}
 
-		if(newTests!=false){
+		if(newTestReport!=false){
 			compareReports();
 		}
 
@@ -98,7 +98,7 @@ var compareReports = function(){
 
 	var failed = false;
 	
-	var newTestNames = Object.keys(newTests);
+	var newTestNames = Object.keys(newTestReport);
 	var iNewTestNames = newTestNames.length;
 
 	var values = {
@@ -108,34 +108,42 @@ var compareReports = function(){
 		"passed": 3
 	}
 
+	var newTests = [];
+
 	while(iNewTestNames--){
-		var newTest = newTests[newTestNames[iNewTestNames]];
-		var oldTest = oldTests[newTestNames[iNewTestNames]] || "new";
+		var newTest = newTestReport[newTestNames[iNewTestNames]];
+		var oldTest = oldTestReport[newTestNames[iNewTestNames]] || "new";
 
 		if(values[newTest]<values[oldTest]){
 			failed = true;
-			console.log("TEST `",newTestNames[iNewTestNames],"` IN UNEXCEPTABLE STATE ", newTest, " VS ", oldTest);
+			console.error("`",newTestNames[iNewTestNames],"` is in an unexceptable state! Was", oldTest, "is", newTest);
 		}
 
 		if(oldTest!="new"){
-			delete oldTests[newTestNames[iNewTestNames]];
+			delete oldTestReport[newTestNames[iNewTestNames]];
+		}
+		else{
+			newTests.push(newTestNames[iNewTestNames]);
 		}
 	}
 
-	if(Object.keys(oldTests).length!=0){
-		console.log(oldTests);
-		failed = true;
+	if(Object.keys(oldTestReport).length!=0){
 
-		var oldTestNames = Object.keys(oldTests);
+		var oldTestNames = Object.keys(oldTestReport);
 		var iOldTestNames = oldTestNames.length;
 
 		while(iOldTestNames--){
-			console.log("TEST `",newTestNames[iNewTestNames],"` IN UNEXCEPTABLE STATE ", newTest, " VS ", oldTest);
+			console.log("`", oldTestNames[iOldTestNames],"` is missing.");
+			if(newTests.length>0){
+				console.log("Is it one of these?", newTests);
+			}
 		}
+
+		process.exit(1);
 	}
 
 	if(failed){
-		console.log("FAILED");
+		console.error("Your commit has not been accepted. See above for details.");
 		process.exit(1);
 	}
 	else{
@@ -145,7 +153,7 @@ var compareReports = function(){
 }
 
 var saveTestReport = function(){
-	fs.writeFile(reportFile, JSON.stringify(newTests), function(err){
+	fs.writeFile(reportFile, JSON.stringify(newTestReport), function(err){
 		if(err){
 			console.error("FAILED TO SAVE TEST REPORT", err);
 			process.exit(1);
