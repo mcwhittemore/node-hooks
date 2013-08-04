@@ -1,0 +1,7 @@
+{
+  "name": "valid-mocha-tests",
+  "version": "0.0.0",
+  "description": "pre-commit hook that validates mocha tests",
+  "main": "index.js",
+  "type": "node"
+}

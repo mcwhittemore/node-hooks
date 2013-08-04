@@ -1,0 +1,5 @@
+{
+	"pre-commit": {
+		"valid-mocha-tests": "0.0.0"
+	}
+}
