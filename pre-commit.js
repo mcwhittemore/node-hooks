@@ -112,7 +112,7 @@ var compareReports = function(){
 		var newTest = newTests[newTestNames[iNewTestNames]];
 		var oldTest = oldTests[newTestNames[iNewTestNames]] || "new";
 
-		if(values[newTests]<values[oldTest]){
+		if(values[newTest]<values[oldTest]){
 			failed = true;
 			console.log("TEST `",newTestNames[iNewTestNames],"` IN UNEXCEPTABLE STATE ", newTest, " VS ", oldTest);
 		}
