@@ -10,7 +10,7 @@ var oldTestReport = false;
 
 var start = function(){
 	
-	exec("git stash -q --keep-index", function(){
+	exec("git stash -q --keep-index", function(err, stderr, stdout){
 		runTests();
 	});
 
