@@ -68,7 +68,8 @@ var judge = function(){
 		}
 	}
 
-	if(oldTests.length!=0){
+	if(Object.keys(oldTests).length!=0){
+		console.log(oldTests);
 		failed = true;
 
 		var oldTestNames = Object.keys(oldTests);
@@ -80,6 +81,7 @@ var judge = function(){
 	}
 
 	if(failed){
+		console.log("FAILED");
 		process.exit(1);
 	}
 	else{
