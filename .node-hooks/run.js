@@ -1,24 +1,5 @@
 var fs = require("fs");
-
-var getPackage = function(name, path){
-	var file = ".node-hooks/"+name+"/package.json";
-	fs.readFile(file, function(err, data){
-		var options = JSON.parse(data);
-		console.log(name, options);
-		process.exit(0);
-	});
-}
-
-var preCommit = function(commands){
-	var keys = Object.keys(commands);
-
-	var iKeys = keys.length;
-
-	while(iKeys--){
-		var key = keys[iKeys];
-		getPackage(key, commands[key]);
-	}
-}
+var exec = require('child_process').exec;
 
 var run = function(hook){
 
@@ -40,8 +21,8 @@ var run = function(hook){
 			}
 
 
-			if(hook=="pre-commit"){
-				preCommit(options[hook]);
+			if(options[hook]!=undefined){
+				queue(Object.keys(options[hook]), options[hook]);
 			}
 			else{
 				console.error("UNKNWON COMMAND `", hook, "`");
@@ -49,6 +30,84 @@ var run = function(hook){
 			}
 		}
 
+	});
+}
+
+var queue = function(keys, commands){
+
+	var iKeys = keys.length-1;
+	var key = keys[iKeys];
+
+	open(key, commands[key], function(err, result){
+		if(err){
+			console.error("ERROR ENACTING `", key, "`", err);
+			process.exit(1);
+		}
+		else if(result.code==1){
+			console.error(result.message);
+			process.exit(1);
+		}
+		else if(result.message!=undefined){
+			console.error(result.message);
+		}
+
+		delete keys[iKeys];
+
+		if(keys.length==0){
+			process.exit(0);
+		}
+		else{
+			queue(keys, commands);
+		}
+	});
+}
+
+var open = function(name, path, callback){
+	var folder = ".node-hooks/"+name+"/";
+	fs.readFile(folder+"package.json", function(err, data){
+		if(err){
+			fs.readFile(path+"package.json", function(err, data){
+				if(err){
+					callback("CANNOT FIND `", name, "`");
+				}
+				else{
+					prep(data, path, callback);
+				}
+			});
+		}
+		else{
+			prep(data, folder, callback);
+		}
+	});
+}
+
+var prep = function(data, folder, callback){
+	var options = undefined;
+
+	try{
+		options = JSON.parse(data);
+	}
+	catch(err){
+		callback(err);
+	}
+
+	if(options){
+		var main = options["main"] || "index.js";
+		var type = options["type"] || "node";
+
+		var command = type=="shell" ? folder+main : type+" "+folder+main;
+
+		enact(command, callback);
+	}
+}
+
+var enact = function(command, callback){
+	exec(command, function(err, stderr, stdout){
+		callback(null, {code: 1, message: {
+			err: err,
+			stderr: stderr,
+			stdout: stdout
+		}});
 	});
 }
 

@@ -10,9 +10,9 @@ var oldTestReport = false;
 
 var start = function(){
 	
-	exec("git stash -q --keep-index", function(err, stderr, stdout){
+	//exec("git stash -q --keep-index", function(err, stderr, stdout){
 		runTests();
-	});
+	//});
 
 	loadTestReport();
 }
@@ -169,9 +169,9 @@ var saveTestReport = function(){
 }
 
 var stop = function(exit_code){
-	exec("git stash pop -q", function(){
+	//exec("git stash pop -q", function(){
 		process.exit(exit_code);
-	});
+	//});
 }
 
 
