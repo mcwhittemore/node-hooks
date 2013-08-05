@@ -101,12 +101,41 @@ var prep = function(data, folder, callback){
 }
 
 var enact = function(command, callback){
-	exec(command, function(err, stderr, stdout){
-		callback(null, {code: 0, message: {
-			err: err,
-			stderr: stderr,
-			stdout: stdout
-		}});
+
+	var info = {
+		err: undefined,
+		stdout: undefined,
+		stderr: undefined,
+		exec_finished: false,
+		exit_code: undefined,
+		exit_signal: undefined,
+		exit_happend: false
+	}
+
+	var close = function(){
+		if(info.exec_finished && info.exit_happend){
+			var message = info.stdout || info.stderr || info.exit_signal;
+			var code = info.exit_code || 1;
+			//console.log(command, info);
+			callback(null, {0, message:message});
+		}
+	}
+
+	var action = exec(command, function(err, stdout, stderr){
+		info.err = err;
+		info.stdout = stdout;
+		info.stderr = stderr;
+		info.exec_finished = true;
+
+		close();
+	});
+
+	action.on("exit", function(code, signal){
+		info.exit_code = code;
+		info.exit_signal = signal;
+		info.exit_happend = true;
+
+		close();
 	});
 }
 
