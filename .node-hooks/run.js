@@ -35,8 +35,7 @@ var run = function(hook){
 
 var queue = function(keys, commands){
 
-	var iKeys = keys.length-1;
-	var key = keys[iKeys];
+	var key = keys[0];
 
 	open(key, commands[key], function(err, result){
 		if(err){
@@ -51,7 +50,7 @@ var queue = function(keys, commands){
 			console.error(result.message);
 		}
 
-		delete keys[iKeys];
+		keys = keys.slice(1);
 
 		if(keys.length==0){
 			process.exit(0);
@@ -103,7 +102,7 @@ var prep = function(data, folder, callback){
 
 var enact = function(command, callback){
 	exec(command, function(err, stderr, stdout){
-		callback(null, {code: 1, message: {
+		callback(null, {code: 0, message: {
 			err: err,
 			stderr: stderr,
 			stdout: stdout
