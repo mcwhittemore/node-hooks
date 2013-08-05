@@ -1,6 +1,8 @@
 var fs = require("fs");
 var exec = require('child_process').exec;
 
+var rootFolder = __dirname+"/..";
+
 var run = function(hook){
 
 	fs.readFile("hooks.json", function(err, data){
@@ -62,10 +64,10 @@ var queue = function(keys, commands){
 }
 
 var open = function(name, path, callback){
-	var folder = ".node-hooks/"+name+"/";
-	fs.readFile(folder+"package.json", function(err, data){
+	var folder = ".node-hooks/"+name;
+	fs.readFile(folder+"/package.json", function(err, data){
 		if(err){
-			fs.readFile(path+"package.json", function(err, data){
+			fs.readFile(path+"/package.json", function(err, data){
 				if(err){
 					callback("CANNOT FIND `", name, "`");
 				}
@@ -94,7 +96,9 @@ var prep = function(data, folder, callback){
 		var main = options["main"] || "index.js";
 		var type = options["type"] || "node";
 
-		var command = type=="shell" ? folder+main : type+" "+folder+main;
+		var command = type=="shell" ? folder+"/"+main : type+" "+folder+"/"+main;
+
+		command += " \""+rootFolder+"\"";
 
 		enact(command, callback);
 	}
@@ -115,9 +119,8 @@ var enact = function(command, callback){
 	var close = function(){
 		if(info.exec_finished && info.exit_happend){
 			var message = info.stdout || info.stderr || info.exit_signal;
-			var code = info.exit_code || 1;
-			//console.log(command, info);
-			callback(null, {0, message:message});
+			var code = info.exit_code !=0 ? 1 : 0;
+			callback(null, {code:code, message:message});
 		}
 	}
 

@@ -1,7 +1,8 @@
 var exec = require('child_process').exec;
 var fs = require('fs');
 
-var reportFile = __dirname+"/test/test-report.json";
+var rootFolder = process.argv[2];
+var reportFile = rootFolder+"/test/test-report.json";
 
 var newTestReport = false;
 var oldTestReport = false;
@@ -18,17 +19,27 @@ var start = function(){
 }
 
 var runTests = function(){
-	exec("./node_modules/mocha/bin/mocha --reporter json", function(err, stderr, stdout){
-		var testJson = JSON.parse(stderr);
-		
-		if(testJson.stats.failures>0){
-			stop(1);
+	exec(rootFolder+"/node_modules/mocha/bin/mocha --reporter json", function(err, stdout, stderr){
+		if(err){
+			console.error("ERROR RUNNING TESTS", err);
+			process.exit(1);
 		}
+		else if(stderr!=""){
+			console.error("STDERROR", stderr);
+			process.exit(1);
+		}
+		else{
+			var testJson = JSON.parse(stdout);
+		
+			if(testJson.stats.failures>0){
+				stop(1);
+			}
 
-		newTestReport = testJsonToTestReport(testJson);
+			newTestReport = testJsonToTestReport(testJson);
 
-		if(oldTestReport!=false){
-			compareReports();
+			if(oldTestReport!=false){
+				compareReports();
+			}
 		}
 	});
 }
