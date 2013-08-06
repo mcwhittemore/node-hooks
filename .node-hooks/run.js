@@ -26,10 +26,6 @@ var run = function(hook){
 			if(options[hook]!=undefined){
 				queue(Object.keys(options[hook]), options[hook]);
 			}
-			else{
-				console.error("UNKNWON COMMAND `", hook, "`");
-				process.exit(1);
-			}
 		}
 
 	});
