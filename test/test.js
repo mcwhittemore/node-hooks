@@ -1,11 +1,7 @@
-it("this should be skipped");
+describe("confirm pre-commit", function(){
 
-it.skip("this too should be skipped", function(){
+	it("is created");
+
+	it("runs via `git commit -m`");
 
 });
-
-describe("hmmmmm", function(){
-	it("thats sweet", function(){
-
-	});
-})
