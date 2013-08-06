@@ -1,6 +1,7 @@
 {
   "name": "node-hooks",
   "version": "0.0.0",
+  "preferGlobal": true,
   "description": "A framework for writing and organizing git hooks in node.js",
   "main": "index.js",
   "directories": {
@@ -14,7 +15,9 @@
     "test": "mocha",
     "echo": "node bin/npm-cli.js"
   },
-  "bin": "./bin/hooks.js",
+  "bin": {
+    "hooks": "./bin/hooks.js"
+  },
   "repository": {
     "type": "git",
     "url": "git://github.com/mcwhittemore/node-hooks.git"
