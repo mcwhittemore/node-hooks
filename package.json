@@ -12,8 +12,9 @@
   },
   "scripts": {
     "test": "mocha",
-    "install": "node ./.node-hooks/install.js"
+    "echo": "node bin/npm-cli.js"
   },
+  "bin": "./bin/hooks.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/mcwhittemore/node-hooks.git"
