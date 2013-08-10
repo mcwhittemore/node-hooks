@@ -1,11 +1,60 @@
-# Node Hooks
+# Hooks
 
-A framework for writing and organizing git hooks in node.js 
+An [NPM](https://github.com/isaacs/npm) for git hooks
 
-## TODO
+## Terms
 
-* Have tests really test this code...
-* Add CLI for questions about deleted tests.
-* Work on stash code, seems to revert back to list commit currently.
-* Add install
-* Create docs
+* `hook-module`:
+* `hook-module specification`:
+* `default hooks`:
+
+## Workflow
+
+This is just an example workflow for install and using hooks.
+
+1. npm install -g node-hooks
+2. cd ./project-folder
+3. git init
+4. hooks init //sets up the hooks and installs defaults
+5. hooks add new-hook
+11. hooks remove unwanted-default-hooks
+
+## Help
+
+### hooks init
+
+Installs hooks into the current project and seeds the project.json file if needed via npm init. If defaults have been saved they will be automatically be added to the project.
+
+#### Options
+
+* --skip-defaults: Skips the defaults
+
+### hooks add
+
+Adds an npm module to the local hooks project if the `hook module's` package.json fits the `hook-module specification` below. By default the module will be added to the hook specified in the module's package.json "default-hook" parameter and to the project's package.json devDependencies parameter.
+
+#### Options
+
+* --default, -d, --global, -g: Adds the module to the default hooks setup
+* --hook: used -hook=[GIT HOOK NAME], this option overrides the hook-module's default-hook parameter.
+* -f, --force: installs a module from npm even if it doesn't meet the `hooks-module specification`. Requires the --hook option
+* --depend: adds the module to the project's package.json dependencies parameter.
+
+### hooks remove
+
+Removes a `hook-module` from the project and from the project's package.json devDependencies parameter.
+
+#### Options
+
+* --safe: only remove the `hook-module` from the hooks parameter of the project's pacakge.json file. This means `npm` will still install the module but it won't be run via hooks.
+* --hard: Also removes the module from the project's dependencies parameter.
+* --default, -d, -global, -g: removes the `hooks-module` from `default hooks`.
+
+### hooks list
+
+Lists the module hooks as they are currently set up in the active project
+
+#### Options
+
+* --default, -d, -global, -g: Lists the module hooks as they are currently setup in the defaults folder.
+
