@@ -17,7 +17,8 @@ It has a key on its `package.json` called hook-module. That key is paired with a
 ```json
 {
 	"default-hook": "pre-commit",
-	"script-type": "node"
+	"script-type": "node",
+	"file-name": "index.js"
 }
 ```
 
@@ -29,7 +30,11 @@ Yes. Though users can override it on `hook add` via the `--hook=` option.
 
 Nope. If it is not provided the value will default to `node`.
 
-### Sub-Question 3: What other `script-types` can I use?
+### Sub-Question 3: Is `file-name` required?
+
+Nope. If this is not provided hooks will fallback to the `package.json` main attribute, and if that is blank it will fall back to `index.js`.
+
+### Sub-Question 4: What other `script-types` can I use?
 
 Please see `Question 3`.
 
@@ -45,4 +50,6 @@ process.exit(1); //failed the hook
 
 ## Question 3: Does my module have to be written in node?
 
-Nope.
+Nope. Just provide the common command line name for the scripting language and all will be well.
+
+For example, `python` should be provided if your hook script has been written in python and `shell` should be provided if your hook is a shell script.

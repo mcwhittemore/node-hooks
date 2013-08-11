@@ -61,3 +61,6 @@ Lists the module hooks as they are currently set up in the active project
 
 * --default, -d, -global, -g: Lists the module hooks as they are currently setup in the defaults folder.
 
+### hooks create
+
+Seeds a folder for a new `hook-module`. Simular to `npm init`
