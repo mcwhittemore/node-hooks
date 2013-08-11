@@ -2,7 +2,6 @@ var fs = require("fs");
 var exec = require("child_process").exec;
 var colors = require("colors");
 
-
 //TODO: Move exhisting hooks into the hooks directory
 
 var createFile = function(fileName, content, chmodX){
@@ -46,13 +45,41 @@ var hasGit = function(){
 	return fs.existsSync(".git");
 }
 
+var hasPackageJson = function(){
+	return fs.existsSync("./package.json");
+}
+
 module.exports = function(args){
 
-	if(hasGit()){
+	//TODO: Add defaults to devDevepencies
+	//TODO: Install hooks
+
+	var git = hasGit();
+	var packageJson = hasPackageJson();
+
+	if(git && packageJson){
 		createHooks();
+		var defaults = require("../lib/default-modules");
+		if(defaults.json!=undefined){
+			//console.log("DEFAULTS", defaults.json);
+			console.log("TODO: ADD AND INSTALL DEFAULTS".yellow);
+		}
+		else{
+			console.error("DEFAULTS FILE IS MISSING".red);
+		}
 	}
-	else{
-		console.log("ERROR".red+" git is required for hooks init");
+	
+	if(!git){
+		console.log("ERROR:".red+" hooks depends on "+ ".git".yellow);
+		console.log("       Please run "+"`git init`".yellow+" before "+"`hooks init`".yellow);
 	}
 
+	if(!packageJson){
+		console.log("ERROR:".red+" hooks depends on "+"package.json".yellow);
+		console.log("       Please run "+"`npm init`".yellow+" before "+"`hooks init`".yellow);
+	}
+
+	if(!packageJson || !git){
+		process.exit(1);
+	}
 }

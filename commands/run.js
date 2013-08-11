@@ -4,33 +4,6 @@ var colors = require("colors");
 
 var rootFolder = __dirname+"/..";
 
-var run = function(hook){
-
-	fs.readFile("hooks.json", function(err, data){
-		
-		if(err){
-			console.error("ERROR READING `hook.json`".red);
-			process.exit(1);
-		}
-		else{
-			var options;
-
-			try{
-				options = JSON.parse(data);
-			}
-			catch(err){
-				console.error("ERROR PARSING `hook.json`".red, err);
-				process.exit(1);
-			}
-
-			if(options[hook]!=undefined){
-				queue(Object.keys(options[hook]), options[hook]);
-			}
-		}
-
-	});
-}
-
 var queue = function(keys, commands){
 
 	var key = keys[0];
@@ -60,7 +33,7 @@ var queue = function(keys, commands){
 }
 
 var open = function(name, path, callback){
-	var folder = ".node-hooks/"+name;
+	var folder = "node_modules/"+name;
 	fs.readFile(folder+"/package.json", function(err, data){
 		if(err){
 			fs.readFile(path+"/package.json", function(err, data){
@@ -135,5 +108,35 @@ var enact = function(command, callback){
 		info.exit_happend = true;
 
 		close();
+	});
+}
+
+module.exports = function(args){
+
+	var folder = args[0] && args[1] ? args[0] : "";
+	var hook = args[1]!=undefined ? args[1] : args[0];
+
+	fs.readFile("hooks.json", function(err, data){
+		
+		if(err){
+			console.error("ERROR READING `hook.json`".red);
+			process.exit(1);
+		}
+		else{
+			var options;
+
+			try{
+				options = JSON.parse(data);
+			}
+			catch(err){
+				console.error("ERROR PARSING `hook.json`".red, err);
+				process.exit(1);
+			}
+
+			if(options[hook]!=undefined){
+				queue(Object.keys(options[hook]), options[hook]);
+			}
+		}
+
 	});
 }
