@@ -41,6 +41,7 @@ var createHooks = function(){
 	}
 }
 
+
 var addDefaults = function(){
 	var defaults = require("../lib/default-modules");
 	if(defaults.json!=undefined){
@@ -68,7 +69,7 @@ module.exports = function(args){
 
 	var git = hasGit();
 	var packageJson = hasPackageJson();
-	
+
 	var addDefaults = args.indexOf("--add-defaults") != -1 ? true : false;
 
 	if(git && packageJson){
