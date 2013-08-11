@@ -5,7 +5,7 @@ An [NPM](https://github.com/isaacs/npm) for git hooks
 ## Terms
 
 * `hook-module`: Any module in npm that meets the `hook-module specification`. 
-* `hook-module specification`: A set of guidelines that define what it means to be a `hook-module`. 
+* `hook-module specification`: A set of guidelines that define what it means to be a `hook-module`. [View here.](https://github.com/mcwhittemore/node-hooks/blob/master/docs/hook-module-specification.md)
 * `default hooks`: `hook-modules` that are added to a project on `hook init`.
 * `npm`: node package manager. This can be (and is) used for more things than node modules.
 * `npm-module`: a bit of code that can be downloaded via npm.
