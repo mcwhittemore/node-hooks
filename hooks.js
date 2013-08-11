@@ -12,7 +12,7 @@
 		}
 		else{
 			console.error("`"+args[0]+"` is not a valid command");
-			require("./commands/help")();
+			require("./commands/help")(args);
 		}
 	}
 

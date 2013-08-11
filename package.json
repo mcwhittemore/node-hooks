@@ -23,7 +23,7 @@
     "pre-commit": ["valid-mocha-tests"]
   },
   "bin": {
-    "hooks": "./bin/hooks.js"
+    "hooks": "./hooks.js"
   },
   "repository": {
     "type": "git",

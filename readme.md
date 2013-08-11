@@ -53,6 +53,10 @@ Removes a `hook-module` from the project and from the project's package.json dev
 * --hard: Also removes the module from the project's dependencies parameter.
 * --default, -d, -global, -g: removes the `hooks-module` from `default hooks`.
 
+### hooks run
+
+Runs a hook.
+
 ### hooks list
 
 Lists the module hooks as they are currently set up in the active project

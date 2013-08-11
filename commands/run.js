@@ -1,5 +1,6 @@
 var fs = require("fs");
 var exec = require('child_process').exec;
+var colors = require("colors");
 
 var rootFolder = __dirname+"/..";
 
@@ -8,7 +9,7 @@ var run = function(hook){
 	fs.readFile("hooks.json", function(err, data){
 		
 		if(err){
-			console.error("ERROR READING `hook.json`");
+			console.error("ERROR READING `hook.json`".red);
 			process.exit(1);
 		}
 		else{
@@ -18,10 +19,9 @@ var run = function(hook){
 				options = JSON.parse(data);
 			}
 			catch(err){
-				console.error("ERROR PARSING `hook.json`", err);
+				console.error("ERROR PARSING `hook.json`".red, err);
 				process.exit(1);
 			}
-
 
 			if(options[hook]!=undefined){
 				queue(Object.keys(options[hook]), options[hook]);
@@ -137,7 +137,3 @@ var enact = function(command, callback){
 		close();
 	});
 }
-
-var hook = process.argv[2];
-
-run(hook);
