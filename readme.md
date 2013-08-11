@@ -26,11 +26,11 @@ This is just an example workflow for install and using hooks.
 
 ### hooks init
 
-Installs hooks into the current project and seeds the project.json file if needed via npm init. If defaults have been saved they will be automatically be added to the project.
+Installs hooks into the current project and seeds the project.json file if needed via npm init. 
 
 #### Options
 
-* --skip-defaults: Skips the defaults
+* --add-defaults: Adds the defaults
 
 ### hooks add
 

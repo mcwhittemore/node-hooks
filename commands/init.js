@@ -41,6 +41,17 @@ var createHooks = function(){
 	}
 }
 
+var addDefaults = function(){
+	var defaults = require("../lib/default-modules");
+	if(defaults.json!=undefined){
+		//console.log("DEFAULTS", defaults.json);
+		console.log("TODO: ADD AND INSTALL DEFAULTS".yellow);
+	}
+	else{
+		console.error("DEFAULTS FILE IS MISSING".red);
+	}
+}
+
 var hasGit = function(){
 	return fs.existsSync(".git");
 }
@@ -51,22 +62,18 @@ var hasPackageJson = function(){
 
 module.exports = function(args){
 
+	//TODO: check if hooks is on the package.json file
 	//TODO: Add defaults to devDevepencies
 	//TODO: Install hooks
 
 	var git = hasGit();
 	var packageJson = hasPackageJson();
+	
+	var addDefaults = args.indexOf("--add-defaults") != -1 ? true : false;
 
 	if(git && packageJson){
 		createHooks();
-		var defaults = require("../lib/default-modules");
-		if(defaults.json!=undefined){
-			//console.log("DEFAULTS", defaults.json);
-			console.log("TODO: ADD AND INSTALL DEFAULTS".yellow);
-		}
-		else{
-			console.error("DEFAULTS FILE IS MISSING".red);
-		}
+		console.log(addDefaults, args);
 	}
 	
 	if(!git){
