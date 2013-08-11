@@ -8,7 +8,8 @@
     "test": "test"
   },
   "dependencies": {
-    "colors": "~0.6.1"
+    "colors": "~0.6.1",
+    "read-package-json": "1.1.1"
   },
   "devDependencies": {
     "mocha": "~1.12.0",
@@ -17,7 +18,8 @@
   "scripts": {
     "test": "mocha",
     "echo": "node bin/npm-cli.js",
-    "try": "sudo npm uninstall -g node-hooks && sudo npm install -g --link"
+    "try": "sudo npm uninstall -g node-hooks && sudo npm install -g --link",
+    "install": "node install.js"
   },
   "hooks":{
     "pre-commit": ["valid-mocha-tests"]
