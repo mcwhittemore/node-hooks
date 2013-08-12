@@ -7,6 +7,7 @@
 	]
 
 	var run = function(args){
+
 		if(commands.indexOf(args[0])!=-1){
 			require("./commands/"+args[0])(args.slice(1));
 		}
