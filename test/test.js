@@ -1,10 +1,14 @@
-var test_folder = process.cwd()+"/test/test_folder";
+test_folder = process.cwd()+"/test/test_folder";
 var exec = require("child_process").exec;
 var should = require("should");
 var colors = require("colors");
 
 run = function(command, callback){
 	exec("cd "+test_folder+" && "+command, callback);
+}
+
+todo = function(){
+	"this needs to be done".should.be.true;
 }
 
 before(function(done){

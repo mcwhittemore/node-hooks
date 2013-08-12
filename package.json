@@ -17,7 +17,7 @@
     "valid-mocha-test": "https://github.com/mcwhittemore/valid-mocha-tests.hook/tarball/master"
   },
   "scripts": {
-    "test": "mocha --reporter tap",
+    "test": "mocha",
     "echo": "node bin/npm-cli.js",
     "try": "sudo npm uninstall -g node-hooks && sudo npm install -g --link",
     "install": "node install.js"

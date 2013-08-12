@@ -58,7 +58,7 @@ var createHooks = function(){
 }
 
 var configurePackageJson = function(options){
-	var packageJsonPath = process.env.PWD+"/package.json";
+	var packageJsonPath = process.cwd()+"/package.json";
 
 	var packageJson = require(packageJsonPath);
 	packageJson.hooks = packageJson.hooks == undefined ? {} : packageJson.hooks;
