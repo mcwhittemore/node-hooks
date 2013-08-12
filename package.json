@@ -13,10 +13,11 @@
   },
   "devDependencies": {
     "mocha": "~1.12.0",
-    "valid-mocha-test": "https://github.com/mcwhittemore/valid-mocha-test.hook/tarball/master"
+    "should": "1.2.2",
+    "valid-mocha-test": "https://github.com/mcwhittemore/valid-mocha-tests.hook/tarball/master"
   },
   "scripts": {
-    "test": "mocha",
+    "test": "mocha --reporter tap",
     "echo": "node bin/npm-cli.js",
     "try": "sudo npm uninstall -g node-hooks && sudo npm install -g --link",
     "install": "node install.js"
