@@ -11,6 +11,9 @@
 		if(commands.indexOf(args[0])!=-1){
 			require("./commands/"+args[0])(args.slice(1));
 		}
+		else if(args[0]=="--version"){
+			require("./commands/version")(true);
+		}
 		else{
 			console.error("`"+args[0]+"` is not a valid command");
 			require("./commands/help")(args);
