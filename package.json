@@ -22,8 +22,10 @@
     "try": "sudo npm uninstall -g node-hooks && sudo npm install -g --link",
     "install": "node install.js"
   },
-  "hooks":{
-    "pre-commit": ["valid-mocha-tests"]
+  "hooks": {
+    "pre-commit": [
+      "valid-mocha-tests"
+    ]
   },
   "bin": {
     "hooks": "./hooks.js"
