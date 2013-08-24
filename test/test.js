@@ -11,23 +11,28 @@ todo = function(){
 	"this needs to be done".should.be.true;
 }
 
-before(function(done){
-
-	exec("mkdir "+test_folder, function(err, stdout, stderr){
-		if(err){
-			console.log(stderr);
-		}
-		done(err);
-	});
-});
-
-after(function(done){
-
+var cleanUp = function(callback){
 	exec("rm -rf "+test_folder, function(err, stderr, stdout){
 		if(err){
 			console.log(stderr);
 		}
-		done(err);
+		callback(err);
 	});
+}
+
+before(function(done){
+	cleanUp(function(){
+		exec("mkdir "+test_folder, function(err, stdout, stderr){
+			if(err){
+				console.log(stderr);
+			}
+			done(err);
+		});
+	})
+});
+
+after(function(done){
+
+	cleanUp(done);
 
 });

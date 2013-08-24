@@ -4,23 +4,33 @@ var colors = require("colors");
 
 /** ================================================================================ **/
 
-//TODO: Move exhisting hooks into the hooks directory
+var hooksJsonPath = process.cwd()+"/hooks.json";
+
+/** ================================================================================ **/
+
 
 var main = function(args){
 
-	//TODO: check if hooks is on the package.json file
 	//TODO: Add defaults to devDevepencies
 	//TODO: Install hooks
 
 	var git = hasGit();
-	var packageJson = hasPackageJson();
+	var hooksJson = hasHooksJson();
 
 	var options = {};
 	options.addDefaults = args.indexOf("--add-defaults") != -1 ? true : false;
 
-	if(git && packageJson){
-		createHooks();
-		configurePackageJson(options);
+	if(git){
+		createHooks(options);
+		if(!hooksJson){
+			createHooksJson(options);
+		}
+		else if(options.addDefaults){
+			addDefaults(options);
+		}
+		else{
+			installHooks(options);
+		}
 	}
 	
 	if(!git){
@@ -28,18 +38,12 @@ var main = function(args){
 		console.log("       Please run "+"`git init`".yellow+" before "+"`hooks init`".yellow);
 	}
 
-	if(!packageJson){
-		console.log("ERROR:".red+" hooks depends on "+"package.json".yellow);
-		console.log("       Please run "+"`npm init`".yellow+" before "+"`hooks init`".yellow);
-	}
-
-	if(!packageJson || !git){
+	if(!git){
 		process.exit(1);
 	}
 }
 
 /** ================================================================================ **/
-
 
 var createHooks = function(){
 
@@ -57,27 +61,14 @@ var createHooks = function(){
 	}
 }
 
-var configurePackageJson = function(options){
-	var packageJsonPath = process.cwd()+"/package.json";
-
-	var packageJson = require(packageJsonPath);
-	packageJson.hooks = packageJson.hooks == undefined ? {} : packageJson.hooks;
-
-	if(options.addDefaults){
-		packageJson.hooks = addDefaults(packageJson.hooks);
-	}
-
-	installHooks(packageJson.hooks, function(err, result){
-		if(err){
-			console.log("ERROR".red, err);
-		}
-		else{
-			createFile(packageJsonPath, JSON.stringify(packageJson, null, 2) + '\n', false);
-		}
+var createHooksJson = function(options){
+	var defaultHooksJson = {};
+	createFile(hooksJsonPath, JSON.stringify(defaultHooksJson), false, function(){
+		installHooks(options);
 	});
 }
 
-var addDefaults = function(hooks){
+var addDefaults = function(options){
 	var defaults = require("../lib/default-modules");
 	if(defaults.json!=undefined){
 		//console.log("DEFAULTS", defaults.json);
@@ -86,12 +77,56 @@ var addDefaults = function(hooks){
 	else{
 		console.error("DEFAULTS FILE IS MISSING".red);
 	}
+
+	installHooks(options);
 }
 
-var installHooks = function(hooks, callback){
+var installHooks = function(options){
+	var hooksJson = require(hooksJsonPath);
 
-	callback(null, true);
+	var hooks = [];
 
+	var hookTypes = require("../lib/possible-hooks");
+
+	for(var i=0; i<hookTypes.length; i++){
+		if(hooksJson[hookTypes[i]]!=undefined){
+			var hookNames = Object.keys(hooksJson[hookTypes[i]]);
+			for(var j=0; j<hookNames.length; j++){
+				hooks.push({name:hookNames[j], version:hooksJson[hookTypes[i]][hookNames[j]]});
+			}
+		}
+	}
+	
+	var installHook = function(i, hooks, callback){
+		if(i<hooks.length){
+			var command = "npm install "+hooks[i].name+"@"+hooks[i].version;
+			exec(command, function(err, stdout, stderr){
+
+				if(err){
+					console.log(err.red);
+				}
+
+				if(stderr){
+					console.log(stderr.red);
+				}
+
+				if(stdout){
+					console.log(stdout.green);
+				}
+
+				installHook(i+1, hooks, callback);
+			});
+		}
+		else{
+			callback();
+		}
+	}
+
+	var whenFinsihed = function(){
+		console.log("INSTALLED");
+	}
+
+	installHook(0, hooks, whenFinsihed);
 }
 
 /** ================================================================================ **/
@@ -101,14 +136,14 @@ var hasGit = function(){
 	return fs.existsSync(".git");
 }
 
-var hasPackageJson = function(){
-	return fs.existsSync("./package.json");
+var hasHooksJson = function(){
+	return fs.existsSync(hooksJsonPath);
 }
 
 /** ================================================================================ **/
 
 
-var createFile = function(fileName, content, chmodX){
+var createFile = function(fileName, content, chmodX, callback){
 	var fileMade = function(err){
 		if(err){
 			console.error("`"+fileName+"` could not be created", err);
@@ -123,6 +158,9 @@ var createFile = function(fileName, content, chmodX){
 		if(err){
 			console.error("`"+fileName+"` could not be created", err, stderr);
 			process.exit(1);
+		}
+		else if(callback!=undefined){
+			callback();
 		}
 	}
 
