@@ -11,8 +11,7 @@ var hooksJsonPath = process.cwd()+"/hooks.json";
 
 var main = function(args){
 
-	//TODO: Add defaults to devDevepencies
-	//TODO: Install hooks
+	//TODO: Add defaults to hooks.json
 
 	var git = hasGit();
 	var hooksJson = hasHooksJson();

@@ -42,7 +42,7 @@ describe("hooks init", function(){
 
 		describe("perserve the current hooks", function(){
 			it.skip("once i get to it", function(){
-				todo();
+				//TODO: implment .git/hook preservation
 			});
 		});
 
@@ -55,7 +55,7 @@ describe("hooks init", function(){
 				});
 			});
 
-			it.skip("when its not created", function(done){
+			it("when its not created", function(done){
 				var hooksJsonPath = test_folder+"/hooks.json";
 				var beforeJson = "{}";
 				run("hooks init", function(err, stdout){
