@@ -3,8 +3,9 @@
 
 	var commands = [
 		"help",
-		"init",
-		"run"
+		"install",
+		"run",
+		"add"
 	]
 
 	var run = function(args){

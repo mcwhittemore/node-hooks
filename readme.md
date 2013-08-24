@@ -18,15 +18,15 @@ This is just an example workflow for install and using hooks.
 1. npm install -g node-hooks
 2. cd ./project-folder
 3. git init
-4. hooks init //sets up the hooks and installs defaults
+4. hooks install //sets up the hooks and installs defaults
 5. hooks add new-hook
 11. hooks remove unwanted-default-hooks
 
 ## Help
 
-### hooks init
+### hooks install
 
-Installs hooks into the current project and seeds the project.json file if needed via npm init. 
+Installs hooks into the current project and seeds the hooks.json file if needed. 
 
 #### Options
 
