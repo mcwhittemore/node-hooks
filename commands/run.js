@@ -113,8 +113,7 @@ var enact = function(command, callback){
 
 module.exports = function(args){
 
-	var folder = args[0] && args[1] ? args[0] : "";
-	var hook = args[1]!=undefined ? args[1] : args[0];
+	var hook = args[0];
 
 	fs.readFile("hooks.json", function(err, data){
 		
