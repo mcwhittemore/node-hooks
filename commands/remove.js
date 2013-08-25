@@ -13,7 +13,9 @@ var main = function(args){
 	var opts = {
 		hard: false,
 		global: false,
-		module: args[args.length-1];
+		module: args[args.length-1],
+		hook: "default",
+		valid: true
 	}
 
 	for(var i=0; i<args.length-1; i++){
@@ -23,21 +25,27 @@ var main = function(args){
 		else if(args[i]=="--default" || args[i]=="-d" || args[i]=="--global" || args[i]=="-g"){
 			opts.global = true;
 		}
+		else if(args[i]=="--hook"){
+			if(opts.hook!="default"){ opts.valid = false; console.log("You cannot use --hook after --all-hooks".red)};
+			opts.hook = args[i+1];
+			i++;
+		}
+		else if(args[i]=="--all-hooks"){
+			if(opts.hook!="default"){ opts.valid = false; console.log("You cannot use --all-hooks after --hook".red)};
+			opts.hook = "all";
+		}
 		else{
 			console.log(args[i].red+ " is not a valid argument on `hooks remove`".yellow);
 			opts.valid = false;
 		}
 	}
 
-	if(opts.hard && (opts.soft || opts.global)){
-		console.log("Error".red+" --hard can't be combined with --soft or --default");
+	if(opts.hard && opts.global){
+		console.log("Error".red+" --hard and --default cannot be combined");
 		opts.valid = false;
 	}
 
-	if(opts.global && (opts.soft || opts.hard)){
-		console.log("Error".red+" --global can't be combined with --soft or --hard");
-		opts.valid = false;
-	}
+	console.log(opts);
 
 	if(opts.valid){
 

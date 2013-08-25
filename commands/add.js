@@ -60,7 +60,7 @@ var setupOptions = function(args){
 		force: false,
 		global: false,
 		hook: "default",
-		depend: false,
+		depend: true,
 		hook_module: args[args.length-1],
 		valid: true
 	}
@@ -71,8 +71,9 @@ var setupOptions = function(args){
 		if(arg=="--default" || arg=="-d" || arg=="--global" || arg=="-g"){
 			opts.global = true;
 		}
-		else if(arg.indexOf("--hook")!=-1){
-			opts.hook = arg.split("=")[1];
+		else if(arg=="--hook"){
+			opts.hook = args[i+1];
+			i++;
 		}
 		else if(arg == "-f" || arg == "--force"){
 			opts.force = true;
@@ -92,7 +93,7 @@ var setupOptions = function(args){
 	}
 
 	if(opts.hook == undefined){
-		console.log("--hook must be followed by =HOOK_NAME".red);
+		console.log("--hook must be followed by <HOOK_NAME>".red);
 		opts.valid = false;
 	}
 	else if(opts.hook != "default"){
