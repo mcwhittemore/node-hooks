@@ -11,6 +11,22 @@ var hooksJsonPath = process.cwd()+"/hooks.json";
 
 var main = function(args){
 
+	if(hasHooksJson()){
+		var opts = setupOptions(args);
+		console.log("ADD", opts);
+	}
+	else{
+		console.log("No `hooks.json` file was found!".red);
+		console.log("\tRun `hooks install` to add hooks to this folder".yellow);
+	}
+}
+
+var hasHooksJson = function(){
+	return fs.existsSync(hooksJsonPath);
+}
+
+
+var setupOptions = function(args){
 	var opts = {
 		force: false,
 		global: false,
@@ -58,14 +74,7 @@ var main = function(args){
 		}
 	}
 
-
-	if(hasHooksJson()){
-		console.log("ADD", opts);
-	}
-	else{
-		console.log("No `hooks.json` file was found!".red);
-		console.log("\tRun `hooks install` to add hooks to this folder".yellow);
-	}
+	return opts;
 }
 
 var addToDefaults = function(){
@@ -81,8 +90,5 @@ var addToDepends = function(){
 }
 
 
-var hasHooksJson = function(){
-	return fs.existsSync(hooksJsonPath);
-}
 
 module.exports = main;

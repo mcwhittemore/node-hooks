@@ -2,7 +2,7 @@ var fs = require("fs");
 var exec = require('child_process').exec;
 var colors = require("colors");
 
-var rootFolder = __dirname+"/..";
+var rootFolder = process.cwd();
 
 var queue = function(keys, commands){
 
@@ -112,8 +112,6 @@ var enact = function(command, callback){
 }
 
 module.exports = function(args){
-
-	console.log(process.pwd());
 
 	var hook = args[0];
 
