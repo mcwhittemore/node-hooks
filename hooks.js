@@ -5,7 +5,8 @@
 		"help",
 		"install",
 		"run",
-		"add"
+		"add",
+		"remove"
 	]
 
 	var run = function(args){

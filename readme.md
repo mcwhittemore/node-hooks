@@ -49,7 +49,6 @@ Removes a `hook-module` from the project and from the project's package.json dev
 
 #### Options
 
-* --safe: only remove the `hook-module` from the hooks parameter of the project's pacakge.json file. This means `npm` will still install the module but it won't be run via hooks.
 * --hard: Also removes the module from the project's dependencies parameter.
 * --default, -d, -global, -g: removes the `hooks-module` from `default hooks`.
 

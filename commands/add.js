@@ -2,7 +2,6 @@ var fs = require("fs");
 var exec = require("child_process").exec;
 var colors = require("colors");
 var install = require("../lib/install-module");
-var hmp
 
 /** ================================================================================ **/
 
@@ -134,7 +133,6 @@ var addToFiles = function(opts){
 	if(opts.global){
 		var defaults = require("../lib/default-modules");
 		var defaultsJsonFile = defaults.filename;
-		console.log("djf", defaultsJsonFile);
 		var defaultsJson = require(defaultsJsonFile);
 		defaultsJson.hooks[opts.hook][opts.name] = opts.version;
 		saveJson(defaultsJsonFile, defaultsJson, true);
