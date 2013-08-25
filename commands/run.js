@@ -113,6 +113,8 @@ var enact = function(command, callback){
 
 module.exports = function(args){
 
+	console.log(process.pwd());
+
 	var hook = args[0];
 
 	fs.readFile("hooks.json", function(err, data){
