@@ -1,5 +1,5 @@
 {
-	"pre-commit": {
-  		"valid-mocha-tests": "https://github.com/mcwhittemore/valid-mocha-tests.hook/tarball/master"
-	}
-} 
+  "pre-commit": {
+    "valid-mocha-tests": "https://github.com/mcwhittemore/valid-mocha-tests.hook/tarball/master"
+  }
+}

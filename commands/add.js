@@ -1,6 +1,8 @@
 var fs = require("fs");
 var exec = require("child_process").exec;
 var colors = require("colors");
+var install = require("../lib/install-module");
+var hmp
 
 /** ================================================================================ **/
 
@@ -8,18 +10,44 @@ var hooksJsonPath = process.cwd()+"/hooks.json";
 
 /** ================================================================================ **/
 
-
 var main = function(args){
 
 	if(hasHooksJson()){
 		var opts = setupOptions(args);
-		console.log("ADD", opts);
+		if(opts.valid){
+			install(opts.hook_module, function(success, node_module){
+				if(success){
+					if(!opts.force){
+						var data = require("../lib/hook-module-package")(node_module);
+						opts.name = node_module;
+						opts.version = data.version;
+						if(isValidHookModule(data.json)){
+							if(opts.hook=="default"){
+								opts.hook = data.json["hook-module"]["default-hook"];
+							}
+							addToFiles(opts);
+						}
+						else{
+							console.log(("`"+opts.hook_module+"`").red+" could not be added as it does not match the hook-module specification. If you want to override this be use the `-f` option.");
+						}
+					}
+					else{
+						addToFiles(opts);
+					}
+				}
+				else{
+					console.log("oops");
+				}
+			});
+		}
 	}
 	else{
 		console.log("No `hooks.json` file was found!".red);
 		console.log("\tRun `hooks install` to add hooks to this folder".yellow);
 	}
 }
+
+/** ================================================================================ **/
 
 var hasHooksJson = function(){
 	return fs.existsSync(hooksJsonPath);
@@ -28,6 +56,8 @@ var hasHooksJson = function(){
 
 var setupOptions = function(args){
 	var opts = {
+		name: undefined,
+		version: undefined,
 		force: false,
 		global: false,
 		hook: "default",
@@ -77,18 +107,54 @@ var setupOptions = function(args){
 	return opts;
 }
 
-var addToDefaults = function(){
-
+var isValidHookModule = function(json){
+	var possible_hooks = require("../lib/possible-hooks");
+	return json["hook-module"] != undefined && possible_hooks.indexOf(json["hook-module"]["default-hook"])!=-1;
 }
 
-var isValidHookModule = function(){
+var addToFiles = function(opts){
 
+	if(opts.version==undefined || opts.version.match(/\d\.\d\.\d/)==null){
+		opts.version = opts.hook_module.split("@")[1];
+	}
+
+	if(opts.version==undefined){
+		//fall back is url
+		opts.version = opts.hook_module;
+	}
+
+	if(opts.depend){
+		var packageJsonFile = process.cwd()+"/package.json";
+		var packageJson = require(packageJsonFile);
+		packageJson.dependencies = packageJson.dependencies == undefined ? {} : packageJson.dependencies;
+		packageJson.dependencies[opts.name] = opts.version;
+		saveJson(packageJsonFile, packageJson);
+	}
+
+	if(opts.global){
+		var defaults = require("../lib/default-modules");
+		var defaultsJsonFile = defaults.filename;
+		console.log("djf", defaultsJsonFile);
+		var defaultsJson = require(defaultsJsonFile);
+		defaultsJson.hooks[opts.hook][opts.name] = opts.version;
+		saveJson(defaultsJsonFile, defaultsJson);
+	}
+
+	var hooksJsonFile = process.cwd()+"/hooks.json";
+	var hooksJson = require(hooksJsonFile);
+	hooksJson[opts.hook][opts.name] = opts.version;
+	saveJson(hooksJsonFile, hooksJson);
 }
 
-var addToDepends = function(){
-
+var saveJson = function(file, json){
+	var content = JSON.stringify(json, null, 2) + '\n';
+	fs.writeFile(file, content, function(err, stderr, stdout){
+		if(err){
+			console.log(stderr.red);
+		}
+	});
 }
 
-
+/** ================================================================================ **/
 
 module.exports = main;

@@ -1,6 +1,7 @@
 var fs = require("fs");
 var exec = require("child_process").exec;
 var colors = require("colors");
+var install = require("../lib/install-module");
 
 /** ================================================================================ **/
 
@@ -100,20 +101,8 @@ var installHooks = function(options){
 	
 	var installHook = function(i, hooks, callback){
 		if(i<hooks.length){
-			var command = "npm install "+hooks[i].name+"@"+hooks[i].version;
-			exec(command, function(err, stdout, stderr){
-
-				if(err){
-					console.log(err.red);
-				}
-
-				if(stderr){
-					console.log(stderr.red);
-				}
-
-				if(stdout){
-					console.log(stdout.green);
-				}
+			var hook = hooks[i].name+"@"+hooks[i].version;
+			install(hook, function(success, node_module){
 
 				installHook(i+1, hooks, callback);
 			});
