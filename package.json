@@ -1,0 +1,41 @@
+{
+  "name": "node-hooks",
+  "version": "0.0.0",
+  "preferGlobal": true,
+  "description": "An NPM for git hooks.",
+  "main": "hooks.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "colors": "~0.6.1",
+    "read": "~1.0.1",
+    "valid-mocha-tests": "https://github.com/mcwhittemore/valid-mocha-tests.hook/tarball/master"
+  },
+  "devDependencies": {
+    "mocha": "~1.12.0",
+    "should": "1.2.2"
+  },
+  "scripts": {
+    "test": "mocha",
+    "echo": "node bin/npm-cli.js",
+    "try": "sudo npm uninstall -g node-hooks && sudo npm install -g --link",
+    "install": "node install.js"
+  },
+  "bin": {
+    "hooks": "./hooks.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mcwhittemore/node-hooks.git"
+  },
+  "keywords": [
+    "git",
+    "hooks"
+  ],
+  "author": "Matthew Chase Whittemore <mcwhittemore@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mcwhittemore/node-hooks/issues"
+  }
+}

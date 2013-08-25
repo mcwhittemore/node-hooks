@@ -128,7 +128,7 @@ var addToFiles = function(opts){
 		var packageJson = require(packageJsonFile);
 		packageJson.dependencies = packageJson.dependencies == undefined ? {} : packageJson.dependencies;
 		packageJson.dependencies[opts.name] = opts.version;
-		saveJson(packageJsonFile, packageJson);
+		saveJson(packageJsonFile, packageJson, false);
 	}
 
 	if(opts.global){
@@ -137,20 +137,26 @@ var addToFiles = function(opts){
 		console.log("djf", defaultsJsonFile);
 		var defaultsJson = require(defaultsJsonFile);
 		defaultsJson.hooks[opts.hook][opts.name] = opts.version;
-		saveJson(defaultsJsonFile, defaultsJson);
+		saveJson(defaultsJsonFile, defaultsJson, true);
 	}
 
 	var hooksJsonFile = process.cwd()+"/hooks.json";
 	var hooksJson = require(hooksJsonFile);
 	hooksJson[opts.hook][opts.name] = opts.version;
-	saveJson(hooksJsonFile, hooksJson);
+	saveJson(hooksJsonFile, hooksJson, false);
 }
 
-var saveJson = function(file, json){
+var saveJson = function(file, json, global){
 	var content = JSON.stringify(json, null, 2) + '\n';
-	fs.writeFile(file, content, function(err, stderr, stdout){
-		if(err){
-			console.log(stderr.red);
+	fs.writeFile(file, content, function(err){
+		if(err && err.code=="EACCES"){
+			console.log("FILE PERMISSION ERROR".red+" The current user does not have access to write to "+file);
+			if(global){
+				console.log("Default hook setup often requires admin access".yellow);
+			}
+		}
+		else if(err){
+			console.log("ERROR: ".red+"saveing "+file);
 		}
 	});
 }
