@@ -1,9 +1,9 @@
 describe("hooks add", function(){
 
-	var local_valid_module = "../test-test";
+	var local_valid_module = "../test-valid";
+	var local_invalid_module = "../test-invalid";
 	var npm_invalid_module = "test-npm-install";
 	var github_invalid_module = "https://github.com/mcwhittemore/test-npm-install/tarball/master";
-	var github_valid_module = "https://github.com/mcwhittemore/valid-mocha-tests.hook/tarball/master";
 
 	describe.skip("to defaults via", function(){
 		//Welp... this needs to be thought out better
@@ -104,6 +104,12 @@ describe("hooks add", function(){
 					done(err);
 				});
 			});
+			it("should fail for a local invalid module", function(done){
+				run("hooks add "+local_invalid_module, function(err, stdout, stderr){
+					stdout.should.include("use the `-f` option.");
+					done(err);
+				});
+			});
 			it("should fail for a npm invalid module", function(done){
 				run("hooks add "+npm_invalid_module, function(err, stdout, stderr){
 					stdout.should.include("use the `-f` option.");
@@ -126,7 +132,7 @@ describe("hooks add", function(){
 					stdout.should.include(" complete".green);
 					var hooksJson = require(test_folder+"/hooks.json");
 					hooksJson.should.have.property("update");
-					hooksJson.update.should.have.property("test-test", "../test-test");
+					hooksJson.update.should.have.property("test-valid", "../test-valid");
 					done(err);
 				});
 			});
@@ -135,22 +141,28 @@ describe("hooks add", function(){
 		describe("forced via", function(){
 			// * -f, --force: installs a module from npm even if it doesn't meet the `hooks-module specification`. Requires the --hook option
 			it("-f should work for a npm invalid module", function(done){
-				run("hooks add -f --hook update "+github_invalid_module, function(err, stdout, stderr){
+				run("hooks add -f --hook update "+local_invalid_module, function(err, stdout, stderr){
 					stdout.should.include(" complete".green);
 					done(err);
 				});
 			});
 			it("--force should work for a github invalid module", function(done){
-				run("hooks add --force --hook update "+github_invalid_module, function(err, stdout, stderr){
+				run("hooks add --force --hook update "+local_invalid_module, function(err, stdout, stderr){
 					stdout.should.include(" complete".green);
 					done(err);
 				});
 			});
 		});
 
-		describe("and include the module in package.json dependencies via", function(){
+		describe("and include the module in package.json dependencies", function(){
 			// * --depend: adds the module to the project's package.json dependencies parameter.
-			it("--depend should work");
+			it("always", function(done){
+				run("hooks add "+local_valid_module, function(err){
+					var json = require(test_folder+"/package.json");
+					json.should.have.property("dependencies", "test-valid");
+					done(err);
+				});
+			});
 		});
 
 		after(function(done){

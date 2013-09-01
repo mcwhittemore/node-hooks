@@ -81,9 +81,10 @@ var setupOptions = function(args){
 		else if(arg == "-f" || arg == "--force"){
 			opts.force = true;
 		}
-		else if(arg=="--depend"){
-			opts.depend = true;
-		}
+		// Need to think about this a bit more
+		// else if(arg=="--depend"){
+		// 	opts.depend = true;
+		// }
 		else{
 			console.log(arg.red+ " is not a valid argument on `hooks add`".yellow);
 			opts.valid = false;

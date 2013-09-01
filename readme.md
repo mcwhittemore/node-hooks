@@ -40,7 +40,6 @@ Adds an npm module to the local hooks project if the `hook module's` package.jso
 
 * --hook <GIT HOOK NAME>: this option overrides the hook-module's default-hook parameter.
 * -f, --force: installs a module from npm even if it doesn't meet the `hooks-module specification`. Requires the --hook option
-* --depend: adds the module to the project's package.json dependencies parameter.
 
 ### hooks remove
 

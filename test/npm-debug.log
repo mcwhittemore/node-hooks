@@ -1,27 +1,18 @@
 0 info it worked if it ends with ok
-1 verbose cli [ 'node',
-1 verbose cli   '/usr/local/bin/npm',
-1 verbose cli   'install',
-1 verbose cli   '/Users/mcw/Documents/mcw/node-hooks/test/test-test' ]
+1 verbose cli [ 'node', '/usr/local/bin/npm', 'test' ]
 2 info using npm@1.3.2
 3 info using node@v0.10.13
-4 error Error: name field must be a string.
-4 error     at Object.module.exports.fixNameField (/usr/local/lib/node_modules/npm/node_modules/read-package-json/node_modules/normalize-package-data/lib/fixer.js:192:13)
-4 error     at /usr/local/lib/node_modules/npm/node_modules/read-package-json/node_modules/normalize-package-data/lib/normalize.js:29:38
-4 error     at Array.forEach (native)
-4 error     at normalize (/usr/local/lib/node_modules/npm/node_modules/read-package-json/node_modules/normalize-package-data/lib/normalize.js:28:15)
-4 error     at final (/usr/local/lib/node_modules/npm/node_modules/read-package-json/read-json.js:310:33)
-4 error     at then (/usr/local/lib/node_modules/npm/node_modules/read-package-json/read-json.js:124:33)
-4 error     at /usr/local/lib/node_modules/npm/node_modules/read-package-json/read-json.js:296:57
-4 error     at fs.js:207:20
-4 error     at Object.oncomplete (fs.js:107:15)
+4 error Error: ENOENT, open '/Users/mcw/Documents/mcw/node-hooks/test/package.json'
 5 error If you need help, you may report this log at:
 5 error     <http://github.com/isaacs/npm/issues>
 5 error or email it to:
 5 error     <npm-@googlegroups.com>
 6 error System Darwin 12.4.1
-7 error command "node" "/usr/local/bin/npm" "install" "/Users/mcw/Documents/mcw/node-hooks/test/test-test"
+7 error command "node" "/usr/local/bin/npm" "test"
 8 error cwd /Users/mcw/Documents/mcw/node-hooks/test
 9 error node -v v0.10.13
 10 error npm -v 1.3.2
-11 verbose exit [ 1, true ]
+11 error path /Users/mcw/Documents/mcw/node-hooks/test/package.json
+12 error code ENOENT
+13 error errno 34
+14 verbose exit [ 34, true ]
