@@ -159,7 +159,7 @@ describe("hooks add", function(){
 			it("always", function(done){
 				run("hooks add "+local_valid_module, function(err){
 					var json = require(test_folder+"/package.json");
-					json.should.have.property("dependencies", "test-valid");
+					json.dependencies.should.have.property("test-valid","../test-valid");
 					done(err);
 				});
 			});
