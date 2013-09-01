@@ -1,4 +1,9 @@
 describe("hooks --version", function(){
+
+	before(function(done){
+		setUp(done);
+	});
+
 	it("should print the current version", function(done){
 		run("hooks --version", function(err, stdout){
 			if(!err){
@@ -7,5 +12,9 @@ describe("hooks --version", function(){
 			}
 			done(err);
 		});
+	});
+
+	after(function(done){
+		cleanUp(done);
 	});
 })

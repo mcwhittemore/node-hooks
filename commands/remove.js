@@ -75,33 +75,35 @@ var removeFromHooks = function(opts){
 		var allHooks = Object.keys(hooksJson);
 		for(var i=0; i<allHooks.length; i++){
 			if(hooksJson[allHooks[i]][opts.module]!=undefined){
-				removeMessage(opts.module, allHooks[i], "c hooks.json");
+				removeMessage(opts.module, allHooks[i], " hooks.json");
 				delete hooksJson[allHooks[i]][opts.module];
 				needsSave = true;
 			}
 		}
 	}
-	else if(opts.hook!="default" && hooksJson[opts.hook]!= undefined && hooksJson[opts.module] != undefined){
-		delete hooksJson[opts.hook][opts.module];
-		needsSave = true;
-		removeMessage(opts.module, opts.hook, "b hooks.json");
-	}
-	else if(opts.hook=="default"){
-		var moduleJson = require("../lib/hook-module-package")(opts.module);
-		if(moduleJson["default-hook"]==undefined){
-			console.log(("`"+opts.module+"` does not have a default hook. Use --hook to specify one").red);
+	else{
+
+		if(opts.hook=="default"){
+			var moduleJson = require("../lib/hook-module-package")(opts.module);
+			if(moduleJson["default-hook"]==undefined){
+				console.log(("`"+opts.module+"` does not have a default hook. Use --hook to specify one").red);
+			}
+			else if(hooksJson[moduleJson["default-hook"]][opts.module]==undefined){
+				console.log(("`"+opts.module+"` has not been installed on its default hook.").red);
+			}
+			else{
+				opts.hook = moduleJson["default-hook"];
+			}
 		}
-		else if(hooksJson[moduleJson["default-hook"]][opts.module]==undefined){
-			console.log(("`"+opts.module+"` has not been installed on its default hook.").red);
+
+		if(opts.hook!="default" && hooksJson[opts.hook] != undefined && hooksJson[opts.hook][opts.module] != undefined){
+			delete hooksJson[opts.hook][opts.module];
+			needsSave = true;
+			removeMessage(opts.module, opts.hook, " hooks.json");
 		}
 		else{
-			delete hooksJson[moduleJson["default-hook"]][opts.module];
-			needsSave = true;
-			removeMessage(opts.module, moduleJson["default-hook"], "a hooks.json");
+			console.log("Unable to remove ".red+("`"+opts.module+"`").cyan+" from ".red+("`"+opts.hook+"`").yellow);
 		}
-	}
-	else{
-		console.log("Unable to remove ".red+("`"+opts.module+"`").cyan+" from ".red+("`"+opts.hook+"`").yellow);
 	}
 
 	if(needsSave){
@@ -126,7 +128,7 @@ var removeFromDefaults = function(opts){
 			}
 		}
 	}
-	else if(opts.hook!="default" && defaultsJson.hooks[opts.hook]!= undefined && defaultsJson.hooks[opts.module] != undefined){
+	else if(opts.hook!="default" && defaultsJson.hooks[opts.hook]!= undefined && defaultsJson.hooks[opts.hook][opts.module] != undefined){
 		delete defaultsJson.hooks[opts.hook][opts.module];
 		needsSave = true;
 		removeMessage(opts.module, opts.hook, "user defaults");
