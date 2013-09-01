@@ -11,9 +11,10 @@ var hooksJsonPath = process.cwd()+"/hooks.json";
 
 var main = function(args){
 
-	if(hasHooksJson()){
-		var opts = setupOptions(args);
-		if(opts.valid){
+
+	var opts = setupOptions(args);		
+	if(opts.valid){
+		if(hasHooksJson() && !opts.global){	
 			install(opts.hook_module, function(success, node_module){
 				if(success){
 					if(!opts.force){
@@ -34,16 +35,18 @@ var main = function(args){
 						addToFiles(opts);
 					}
 				}
-				else{
-					console.log("oops");
-				}
 			});
 		}
+		else if(opts.global){
+			console.log("This needs to be thought out better".yellow+" Look for it in a future release");
+			//addToFiles(opts);
+		}
+		else{
+			console.log("No `hooks.json` file was found!".red);
+			console.log("\tRun `hooks install` to add hooks to this folder".yellow);
+		}
 	}
-	else{
-		console.log("No `hooks.json` file was found!".red);
-		console.log("\tRun `hooks install` to add hooks to this folder".yellow);
-	}
+	
 }
 
 /** ================================================================================ **/
@@ -103,12 +106,17 @@ var setupOptions = function(args){
 			opts.valid = false;
 		}
 	}
+	else if(opts.global && opts.depend){
+		console.log("--default and --depend cannot be used together".red);
+		opts.valid = false;
+	}
 
 	return opts;
 }
 
 var isValidHookModule = function(json){
 	var possible_hooks = require("../lib/possible-hooks");
+	console.log(json);
 	return json["hook-module"] != undefined && possible_hooks.indexOf(json["hook-module"]["default-hook"])!=-1;
 }
 
@@ -123,26 +131,33 @@ var addToFiles = function(opts){
 		opts.version = opts.hook_module;
 	}
 
-	if(opts.depend){
-		var packageJsonFile = process.cwd()+"/package.json";
-		var packageJson = require(packageJsonFile);
-		packageJson.dependencies = packageJson.dependencies == undefined ? {} : packageJson.dependencies;
-		packageJson.dependencies[opts.name] = opts.version;
-		saveJson(packageJsonFile, packageJson, false);
-	}
-
 	if(opts.global){
 		var defaults = require("../lib/default-modules");
-		var defaultsJsonFile = defaults.filename;
-		var defaultsJson = require(defaultsJsonFile);
-		defaultsJson.hooks[opts.hook][opts.name] = opts.version;
-		saveJson(defaultsJsonFile, defaultsJson, true);
+		defaults.json.hooks[opts.hook][opts.name] = opts.version;
+		defaults.save(function(err){
+			if(err){
+				console.log("hooks add failed".yellow);
+			}
+		});
 	}
+	else{
 
-	var hooksJsonFile = process.cwd()+"/hooks.json";
-	var hooksJson = require(hooksJsonFile);
-	hooksJson[opts.hook][opts.name] = opts.version;
-	saveJson(hooksJsonFile, hooksJson, false);
+		if(opts.depend){
+			var packageJsonFile = process.cwd()+"/package.json";
+			var packageJson = require(packageJsonFile);
+			packageJson.dependencies = packageJson.dependencies == undefined ? {} : packageJson.dependencies;
+			packageJson.dependencies[opts.name] = opts.version;
+			saveJson(packageJsonFile, packageJson, false);
+		}
+
+		var hooksJsonFile = process.cwd()+"/hooks.json";
+		var hooksJson = require(hooksJsonFile);
+		if(hooksJson[opts.hook]==undefined){
+			hooksJson[opts.hook] = {};
+		}
+		hooksJson[opts.hook][opts.name] = opts.version;
+		saveJson(hooksJsonFile, hooksJson, false);
+	}
 }
 
 var saveJson = function(file, json, global){

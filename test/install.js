@@ -46,7 +46,7 @@ describe("hooks install", function(){
 			});
 		});
 
-		describe("set the hooks.json file to a black object", function(){
+		describe("set the hooks.json file to a blank object", function(){
 
 			beforeEach(function(done){
 				var hooksJsonPath = test_folder+"/hooks.json";
@@ -72,6 +72,40 @@ describe("hooks install", function(){
 				fs.writeFile(hooksJsonPath, beforeJson, function(err){
 					run("hooks install", function(err, stdout){
 						var afterJson = fs.readFileSync(hooksJsonPath, "utf8");
+						afterJson.should.equal(beforeJson);
+						done(err);
+					});
+				});
+			});
+
+		});
+
+		describe("set the package.json file to an object with the name default", function(){
+
+			beforeEach(function(done){
+				var packageJsonPath = test_folder+"/package.json";
+				run("rm "+packageJsonPath, function(){
+					done();
+				});
+			});
+
+			it("when its not created", function(done){
+				var packageJsonPath = test_folder+"/package.json";
+				var beforeJson = JSON.stringify({name:"default"}, null, 2) + '\n';
+				run("hooks install", function(err, stdout){
+					var afterJson = fs.readFileSync(packageJsonPath, "utf8");
+					afterJson.should.equal(beforeJson);
+					done(err);
+				});
+			});
+
+			it("but not when its filled out", function(done){
+				var packageJsonPath = test_folder+"/package.json";
+				var beforeJson = JSON.stringify({update:[]}, null, 2) + '\n';
+
+				fs.writeFile(packageJsonPath, beforeJson, function(err){
+					run("hooks install", function(err, stdout){
+						var afterJson = fs.readFileSync(packageJsonPath, "utf8");
 						afterJson.should.equal(beforeJson);
 						done(err);
 					});

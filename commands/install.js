@@ -5,6 +5,7 @@ var install = require("../lib/install-module");
 
 /** ================================================================================ **/
 
+var packageJsonPath = process.cwd()+"/package.json";
 var hooksJsonPath = process.cwd()+"/hooks.json";
 
 /** ================================================================================ **/
@@ -15,35 +16,75 @@ var main = function(args){
 	//TODO: Add defaults to hooks.json
 
 	var git = hasGit();
-	var hooksJson = hasHooksJson();
 
 	var options = {};
 	options.addDefaults = args.indexOf("--add-defaults") != -1 ? true : false;
+	options.hasHooksJson = hasHooksJson();
+	options.hasPackageJson = hasPackageJson();
+	options.defaultsAdded = false;
 
 	if(git){
-		createHooks(options);
-		if(!hooksJson){
-			createHooksJson(options);
-		}
-		else if(options.addDefaults){
-			addDefaults(options);
-		}
-		else{
-			installHooks(options);
-		}
+		create(options);
 	}
-	
-	if(!git){
+	else{
 		console.log("ERROR:".red+" hooks depends on "+ ".git".yellow);
 		console.log("       Please run "+"`git init`".yellow+" before "+"`hooks install`".yellow);
-	}
-
-	if(!git){
 		process.exit(1);
 	}
 }
 
 /** ================================================================================ **/
+
+var create = function(options){
+	if(!options.hasPackageJson){
+		createPackageJson(options);
+	}
+	else if(!options.hasHooksJson){
+		createHooksJson(options);
+	}
+	else if(options.addDefaults && !options.defaultsAdded){
+		addDefaults(options);
+	}
+	else{
+		createHooks(options);
+		installHooks(options);
+	}
+}
+
+var createPackageJson = function(options){
+	var packageJson = {name:"default"};
+	
+	var jsonString = JSON.stringify(packageJson, null, 2) + '\n';
+	createFile(packageJsonPath, jsonString, false, function(){
+		options.hasPackageJson = true;
+		create(options);
+	});
+}
+
+var createHooksJson = function(options){
+	var defaultHooksJson = {};
+	
+	var jsonString = JSON.stringify(defaultHooksJson, null, 2) + '\n';
+	createFile(hooksJsonPath, jsonString, false, function(){
+		options.hasHooksJson = true;
+		create(options);
+	});
+}
+
+
+var addDefaults = function(options){
+	var defaults = require("../lib/default-modules");
+	if(defaults.json!=undefined){
+		//console.log("DEFAULTS", defaults.json);
+		console.log("TODO: ADD AND INSTALL DEFAULTS".yellow);
+	}
+	else{
+		console.error("DEFAULTS FILE IS MISSING".red);
+	}
+
+	options.defaultsAdded = true;
+	create(options);
+}
 
 var createHooks = function(){
 
@@ -59,28 +100,6 @@ var createHooks = function(){
 
 		createFile(fileName, content, true);
 	}
-}
-
-var createHooksJson = function(options){
-	var defaultHooksJson = {};
-	
-	var jsonString = JSON.stringify(defaultHooksJson, null, 2) + '\n';
-	createFile(hooksJsonPath, jsonString, false, function(){
-		installHooks(options);
-	});
-}
-
-var addDefaults = function(options){
-	var defaults = require("../lib/default-modules");
-	if(defaults.json!=undefined){
-		//console.log("DEFAULTS", defaults.json);
-		console.log("TODO: ADD AND INSTALL DEFAULTS".yellow);
-	}
-	else{
-		console.error("DEFAULTS FILE IS MISSING".red);
-	}
-
-	installHooks(options);
 }
 
 var installHooks = function(options){
@@ -130,6 +149,10 @@ var hasHooksJson = function(){
 	return fs.existsSync(hooksJsonPath);
 }
 
+var hasPackageJson = function(){
+	return fs.existsSync(packageJsonPath);
+}
+
 /** ================================================================================ **/
 
 
@@ -141,6 +164,9 @@ var createFile = function(fileName, content, chmodX, callback){
 		}
 		else if(chmodX===true){
 			exec("chmod a+x "+fileName, chmodDone);
+		}
+		else{
+			callback();
 		}
 	}
 

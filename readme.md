@@ -38,7 +38,6 @@ Adds an npm module to the local hooks project if the `hook module's` package.jso
 
 #### Options
 
-* --default, -d, --global, -g: Adds the module to the default hooks setup
 * --hook <GIT HOOK NAME>: this option overrides the hook-module's default-hook parameter.
 * -f, --force: installs a module from npm even if it doesn't meet the `hooks-module specification`. Requires the --hook option
 * --depend: adds the module to the project's package.json dependencies parameter.
@@ -49,11 +48,9 @@ Removes a `hook-module` from the default hook.
 
 #### Options
 
-* --default, -d, -global, -g: removes the `hooks-module` from `default hooks`.
 * --hook <GIT HOOK NAME>: remove module from specified git hook.
 * --all-hooks: remove the module from all git hooks
 * --hard: Also removes the module from the project's dependencies parameter.
-
 
 ### hooks run
 
@@ -67,6 +64,6 @@ Lists the module hooks as they are currently set up in the active project
 
 * --default, -d, -global, -g: Lists the module hooks as they are currently setup in the defaults folder.
 
-### hooks create
+### hooks init
 
 Seeds a folder for a new `hook-module`. Simular to `npm init`
