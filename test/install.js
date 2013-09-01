@@ -2,12 +2,20 @@ describe("hooks install", function(){
 
 	describe("won't run without a", function(){
 
+		before(function(done){
+			setUp(done);
+		});
+
 		it(".git folder", function(done){
 			run("hooks install", function(err, stdout, stderr){
 				err.should.have.property("code", 1);
 				stdout.should.include("ERROR:".red+" hooks depends on "+ ".git".yellow);
 				done();
 			});
+		});
+
+		after(function(done){
+			cleanUp(done);
 		});
 	});
 
@@ -16,11 +24,13 @@ describe("hooks install", function(){
 		var fs = require("fs");
 
 		before(function(done){
-			run("mkdir .git", function(e){
-				run("mkdir .git/hooks", function(ee){
-					run("hooks install", function(eee){
-						var err = e || ee || eee;
-						done(err);
+			setUp(function(){
+				run("mkdir .git", function(e){
+					run("mkdir .git/hooks", function(ee){
+						run("hooks install", function(eee){
+							var err = e || ee || eee;
+							done(err);
+						});
 					});
 				});
 			});

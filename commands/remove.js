@@ -22,9 +22,10 @@ var main = function(args){
 		if(args[i]=="--hard"){
 			opts.hard = true;
 		}
-		else if(args[i]=="--default" || args[i]=="-d" || args[i]=="--global" || args[i]=="-g"){
-			opts.global = true;
-		}
+		// NEEDS MORE THOUGHT
+		// else if(args[i]=="--default" || args[i]=="-d" || args[i]=="--global" || args[i]=="-g"){
+		// 	opts.global = true;
+		// }
 		else if(args[i]=="--hook"){
 			if(opts.hook!="default"){ opts.valid = false; console.log("You cannot use --hook after --all-hooks".red)};
 			opts.hook = args[i+1];

@@ -9,8 +9,7 @@
   },
   "dependencies": {
     "colors": "~0.6.1",
-    "read": "~1.0.1",
-    "valid-mocha-tests": "https://github.com/mcwhittemore/valid-mocha-tests.hook/tarball/master"
+    "read": "~1.0.1"
   },
   "devDependencies": {
     "mocha": "~1.12.0",

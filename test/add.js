@@ -167,9 +167,7 @@ describe("hooks add", function(){
 
 		after(function(done){
 			//tear folder down
-			run("rm -rf .git && rm hooks.json", function(err, stdout, stderr){
-				done(err);
-			});
+			cleanUp(done);
 		});
 	})
 

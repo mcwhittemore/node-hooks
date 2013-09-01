@@ -26,7 +26,7 @@ This is just an example workflow for install and using hooks.
 
 ### hooks install
 
-Installs hooks into the current project and seeds the hooks.json file if needed. 
+Installs hooks into the current project and seeds the hooks.json and package.json file if needed. 
 
 #### Options
 
@@ -34,7 +34,7 @@ Installs hooks into the current project and seeds the hooks.json file if needed.
 
 ### hooks add
 
-Adds an npm module to the local hooks project if the `hook module's` package.json fits the `hook-module specification` below. By default the module will be added to the hook specified in the module's package.json "default-hook" parameter and to the project's package.json devDependencies parameter.
+Adds an npm module to the local hooks project if the `hook module's` package.json fits the `hook-module specification` below. By default the module will be added to the hook specified in the module's package.json "default-hook" parameter and to the project's package.json dependencies parameter.
 
 #### Options
 
