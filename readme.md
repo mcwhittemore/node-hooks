@@ -34,7 +34,7 @@ Installs hooks into the current project and seeds the hooks.json and package.jso
 
 ### hooks add
 
-Adds an npm module to the local hooks project if the `hook module's` package.json fits the `hook-module specification` below. By default the module will be added to the hook specified in the module's package.json "default-hook" parameter and to the project's package.json dependencies parameter.
+Adds an npm module to the local hooks project if the `hook module's` package.json fits the `hook-module specification` below. By default the module will be added to the hook specified in the module's package.json "default-hook" parameter and to the project's package.json devDependencies parameter.
 
 #### Options
 
@@ -49,7 +49,7 @@ Removes a `hook-module` from the default hook.
 
 * --hook <GIT HOOK NAME>: remove module from specified git hook.
 * --all-hooks: remove the module from all git hooks
-* --hard: Also removes the module from the project's dependencies parameter.
+* --hard: Also removes the module from the project's devDependencies parameter.
 
 ### hooks run
 

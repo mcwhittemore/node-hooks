@@ -160,13 +160,13 @@ var removeFromPackage = function(opts){
 	var packageJsonFile = process.cwd()+"/package.json";
 	var packageJson = require(packageJsonFile);
 
-	if(packageJson.dependencies!=undefined && packageJson.dependencies[opts.module] != undefined){
-		delete packageJson.dependencies[opts.module];
-		removeMessage(opts.module, "dependencies", "package.json");
+	if(packageJson.devDependencies!=undefined && packageJson.devDependencies[opts.module] != undefined){
+		delete packageJson.devDependencies[opts.module];
+		removeMessage(opts.module, "devDependencies", "package.json");
 		saveJson(packageJsonFile, packageJson, false); 
 	}
 	else{
-		console.log(("Unable to remove `"+opts.module+"` from package.json dependencies.").red, opts);
+		console.log(("Unable to remove `"+opts.module+"` from package.json devDependencies.").red, opts);
 	}
 }
 

@@ -71,7 +71,7 @@ describe("hooks remove from local file", function(){
 		//* --hard: Also removes the module from the project's dependencies parameter.
 		it("should remove the hook from the package.json", function(done){
 			run("hooks remove --hard "+local_valid_installed_name, function(err, stdout, stderr){
-				stdout.should.include("dependencies");
+				stdout.should.include("devDependencies");
 				stdout.should.include("package.json");
 				done(err);
 			});
