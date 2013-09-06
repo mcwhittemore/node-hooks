@@ -16,23 +16,21 @@ It has a key on its `package.json` called hook-module. That key is paired with a
 
 ```json
 {
-	"default-hook": "pre-commit",
 	"script-type": "node",
-	"file-name": "index.js"
+	"valid-for" {
+		"pre-commit": "file-name.js",
+		"post-commit": "other-file-name.js"
+	}
 }
 ```
 
-### Sub-Question 1: Is `default-hook` required?
+### Sub-Question 1: Is `valid-for` required?
 
-Yes. Though users can override it on `hook add` via the `--hook=` option.
+Yes. This is what tell hooks what to run and when.
 
 ### Sub-Question 2: Is `script-type` required?
 
 Nope. If it is not provided the value will default to `node`.
-
-### Sub-Question 3: Is `file-name` required?
-
-Nope. If this is not provided hooks will fallback to the `package.json` main attribute, and if that is blank it will fall back to `index.js`.
 
 ### Sub-Question 4: What other `script-types` can I use?
 
