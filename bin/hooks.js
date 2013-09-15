@@ -12,14 +12,14 @@
 	var run = function(args){
 
 		if(commands.indexOf(args[0])!=-1){
-			require("./commands/"+args[0])(args.slice(1));
+			require("../commands/"+args[0])(args.slice(1));
 		}
 		else if(args[0]=="--version"){
-			require("./commands/version")(true);
+			require("../commands/version")(true);
 		}
 		else{
 			console.error("`"+args[0]+"` is not a valid command");
-			require("./commands/help")(args);
+			require("../commands/help")(args);
 		}
 	}
 
@@ -28,7 +28,7 @@
 	var userArgs = process.argv.slice(2);
 
 	if(userArgs.length==0){
-		require("./commands/help")();
+		require("../commands/help")();
 	}
 	else{
 		run(userArgs);
