@@ -3,13 +3,12 @@
   "version": "0.0.0",
   "preferGlobal": true,
   "description": "An NPM for git hooks.",
-  "main": "hooks.js",
+  "main": "./bin/hooks.js",
   "directories": {
     "test": "test"
   },
   "dependencies": {
-    "colors": "~0.6.1",
-    "read": "~1.0.1"
+    "colors": "~0.6.1"
   },
   "devDependencies": {
     "mocha": "~1.12.0",
@@ -17,9 +16,9 @@
   },
   "scripts": {
     "test": "mocha",
-    "try": "sudo npm uninstall -g node-hooks && sudo npm install -g --link",
-    "postinstall": "./../../node_modules/.bin/hooks install",
-    "preuninstall": "./../../node_modules/.bin/hooks uninstall"
+    "try": "sudo npm uninstall -g node-hooks && sudo npm install --link",
+    "postinstall": "./node_modules/.bin/hooks install",
+    "preuninstall": "./node_modules/.bin/hooks uninstall"
   },
   "bin": {
     "hooks": "./bin/hooks.js"
