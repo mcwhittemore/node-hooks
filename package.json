@@ -20,7 +20,7 @@
     "try": "sudo npm uninstall -g node-hooks && sudo npm install -g --link"
   },
   "bin": {
-    "hooks": "./hooks.js"
+    "hooks": "./bin/hooks.js"
   },
   "repository": {
     "type": "git",
