@@ -88,7 +88,8 @@ var addDefaults = function(options){
 
 var createHooks = function(){
 
-	var baseContent = "#!/bin/sh" + "\n\n" + "hooks run";
+
+	var baseContent = "#!/bin/sh" + "\n\n" + "./node_modules/.bin/hooks run";
 	var hooks = require("../lib/possible-hooks");
 	var numHooks = hooks.length;
 

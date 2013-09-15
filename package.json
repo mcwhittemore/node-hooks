@@ -17,7 +17,9 @@
   },
   "scripts": {
     "test": "mocha",
-    "try": "sudo npm uninstall -g node-hooks && sudo npm install -g --link"
+    "try": "sudo npm uninstall -g node-hooks && sudo npm install -g --link",
+    "postinstall": "./../../node_modules/.bin/hooks install",
+    "preuninstall": "./../../node_modules/.bin/hooks uninstall"
   },
   "bin": {
     "hooks": "./bin/hooks.js"
