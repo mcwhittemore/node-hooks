@@ -27,7 +27,11 @@ This is just an example workflow for install and using hooks.
 
 ### hooks install
 
-Installs hooks into the current project and seeds the hooks.json and package.json file if needed. 
+Installs hooks into the current working directory and seeds the hooks.json and package.json file if needed.
+
+### hooks uninstall
+
+Uninstall hooks from the current working directory. Removes hooks.json, but does not touch package.json.
 
 ### hooks add {hook-module} [options]
 
@@ -38,18 +42,16 @@ Adds an npm module to the local hooks project if the `hook module's` package.jso
 * --hook {GIT HOOK NAME}: this option overrides the hook-module's default-hook parameter.
 * -f, --force: installs a module from npm even if it doesn't meet the `hooks-module specification`. Requires the --hook option
 * --soft: don't add the module to the package.json
-* --global, -g: add module to all
 
 ### hooks remove {hook-module} [options]
 
-Removes a `hook-module` from the default hook.
+Removes a `hook-module` from the default hooks.
 
 #### Options
 
 * --hook <GIT HOOK NAME>: remove module from specified git hook.
 * --all-hooks: remove the module from all git hooks
 * --hard: Also removes the module from the project's devDependencies parameter.
-* --global, -g: remove from the global context
 
 ### hooks run <git-hook>
 
@@ -59,19 +61,21 @@ Runs a hook.
 
 1. Rework globals
 	* ~/.hooks/global: hooks a user wants to run for all their projects
-2. Fix install: use "postinstall": "./../../node_modules/.bin/git-hooks --install" but for hooks
-3. Add uninstall: use "preuninstall": "./../../node_modules/.bin/git-hooks --uninstall" but for hooks
-3. Rework run command for non-global-installers, use #!/usr/bin/env bash \n ./node_modules/.bin/git-hooks run "$0" "$@"
-4. Remove add defaults from install
 5. Add `hooks skip hook-module` to skip globals
-6. Add in local usage stats (will be used to give recomendations for hooks install)	
-	* ~/.hooks/used.json: a hash listing what hooks have been used. What folders they have been used in and for which git-hook they have been used for.
 
 ## Upcoming Commands
 
+### globals
+
+* hooks install --global
+* hooks uninstall --global
+* hooks add --global
+* hooks remove --global
+* hooks run --global
+
 ### hooks skip {hook-module} [options]
 
-Skips a global module on a project level
+Remove a modules from the project (hooks remove --all-hooks) and forces a skip if its installed on a global level
 
 #### Options
 
@@ -84,7 +88,7 @@ Lists the module hooks as they are currently set up in the active project
 
 #### Options
 
-* -global, -g: Lists the module hooks as they are currently setup in the defaults folder.
+* --global: Lists the module hooks as they are currently setup in the defaults folder.
 
 ### hooks search key words
 
