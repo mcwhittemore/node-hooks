@@ -4,6 +4,7 @@
 	var commands = [
 		"help",
 		"install",
+		"uninstall",
 		"run",
 		"add",
 		"remove"
