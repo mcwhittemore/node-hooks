@@ -97,6 +97,11 @@ var createHooks = function(){
 		var hook = hooks[numHooks];
 
 		var fileName = "./.git/hooks/"+hook;
+
+		if(fs.existsSync(fileName)){
+			fs.renameSync(fileName, fileName+".old");
+		}
+
 		var content = baseContent + " " + hook;
 
 		createFile(fileName, content, true);
@@ -143,7 +148,6 @@ var installHooks = function(options){
 
 
 var hasGit = function(){
-	console.log(process.cwd());
 	return fs.existsSync(".git");
 }
 
