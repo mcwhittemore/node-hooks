@@ -34,6 +34,11 @@ var main = function(args){
 			console.log(hook.blue+" has been replaced with its archived version");
 		}
 	}
+
+	if(fs.existsSync("hooks.json")){
+		fs.unlinkSync("hooks.json");
+		console.log("hooks.json".blue+" has been removed");
+	}
 }
 
 module.exports = main;
