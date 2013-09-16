@@ -51,7 +51,7 @@ describe("hooks add", function(){
 			it("--hook should work", function(done){
 				run("hooks add --hook update "+local_valid_module, function(err, stdout){
 					stdout.should.include(" complete".green);
-					var hooksJson = require(test_folder+"/hooks.json");
+					var hooksJson = readJson(test_folder+"/hooks.json");
 					hooksJson.should.have.property("update");
 					hooksJson.update.should.have.property("test-valid", "../test-valid");
 					done(err);
@@ -79,8 +79,9 @@ describe("hooks add", function(){
 			// * --depend: adds the module to the project's package.json dependencies parameter.
 			it("always", function(done){
 				run("hooks add "+local_valid_module, function(err){
-					var json = require(test_folder+"/package.json");
-					json.devDependencies.should.have.property("test-valid","../test-valid");
+					var json = readJson(test_folder+"/package.json");
+					console.log(json);
+					json.dependencies.should.have.property("test-valid","../test-valid");
 					done(err);
 				});
 			});

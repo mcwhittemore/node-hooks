@@ -4,6 +4,42 @@ var colors = require("colors");
 
 var rootFolder = process.cwd();
 
+var main = function(args){
+
+	var hook = args[0];
+
+	var hooks = require("../lib/possible-hooks");
+
+	if(hooks.indexOf(hook)==-1){
+		console.error(hook.blue+" is not a valid git-hook".red);
+		process.exit(1);
+	}
+
+	fs.readFile("hooks.json", function(err, data){
+		
+		if(err){
+			console.error("ERROR READING `hook.json`".red);
+			process.exit(1);
+		}
+		else{
+			var options;
+
+			try{
+				options = JSON.parse(data);
+			}
+			catch(err){
+				console.error("ERROR PARSING `hook.json`".red, err);
+				process.exit(1);
+			}
+
+			if(options[hook]!=undefined){
+				queue(Object.keys(options[hook]), options[hook]);
+			}
+		}
+
+	});
+}
+
 var queue = function(keys, commands){
 
 	var key = keys[0];
@@ -111,31 +147,4 @@ var enact = function(command, callback){
 	});
 }
 
-module.exports = function(args){
-
-	var hook = args[0];
-
-	fs.readFile("hooks.json", function(err, data){
-		
-		if(err){
-			console.error("ERROR READING `hook.json`".red);
-			process.exit(1);
-		}
-		else{
-			var options;
-
-			try{
-				options = JSON.parse(data);
-			}
-			catch(err){
-				console.error("ERROR PARSING `hook.json`".red, err);
-				process.exit(1);
-			}
-
-			if(options[hook]!=undefined){
-				queue(Object.keys(options[hook]), options[hook]);
-			}
-		}
-
-	});
-}
+module.exports = main;

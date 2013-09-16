@@ -9,6 +9,7 @@
   "author": "",
   "license": "BSD",
   "hook-module": {
-  	"default-hook": "pre-commit"
+    "script-type": "node",
+  	"valid-for": "pre-commit"
   }
 }

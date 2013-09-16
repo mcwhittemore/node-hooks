@@ -20,7 +20,7 @@ describe("hooks run should", function(){
 					done(err);
 				}
 				else{
-					run("hooks run "+hook, function(err, stderr, stdout){
+					run("hooks run "+hook, function(err, stdout,stderr){
 						stdout.should.include("this is a test");
 						done(err);
 					});
@@ -83,7 +83,7 @@ describe("hooks run should", function(){
 		var invalid = hooks.join();
 		it("like "+invalid, function(done){
 			run("hooks run "+invalid, function(err, stdout, stderr){
-				stderr.should.include("is not a valid hook");
+				stderr.should.include("is not a valid git-hook");
 				done(err);
 			});
 		});
