@@ -3,49 +3,88 @@ describe("hooks run should", function(){
 	var local_valid_module = "../test-valid";
 
 	before(function(done){
-		this.timeout(10000);
+		this.timeout(100000);
 		cleanUp(function(){
 			setUp(function(){
 				run("git init && hooks install", function(err){
-					if(err){
-						done(err);
-					}
-					else{
-						var k = 0;
-						for(var i=0; i<hooks.length; i++){
-							run("hooks add --hook "+hooks[i]+" "+local_valid_module, function(err){
-								k++;
-								if(err){
-									done(err);
-								}
-								else if(k==hooks.length-1){
-									done(err);
-								}
-							});
-						}
-					}
+					done(err);
 				});
 			});
 		});
 	});
 
 	describe("work for", function(){
-		for(var i=0; i<hooks.length; i++){
-			it(hooks[i]+" hook", function(done){
-				run("hooks run "+hooks[i], function(err, stdout){
-					stdout.should.equal("this is a test");
+		var hookTest = function(hook, done){
+			run("hooks add --soft --hook "+hook+" "+local_valid_module, function(err, stdout, stderr){
+				if(err){
 					done(err);
-				});
+				}
+				else{
+					run("hooks run "+hook, function(err, stderr, stdout){
+						stdout.should.include("this is a test");
+						done(err);
+					});
+				}
 			});
 		}
+
+		it("applypatch-msg", function(done){
+			hookTest("applypatch-msg", done)
+		});
+		it("pre-applypatch", function(done){
+			hookTest("pre-applypatch", done)
+		});
+		it("post-applypatch", function(done){
+			hookTest("post-applypatch", done)
+		});
+		it("pre-commit", function(done){
+			hookTest("pre-commit", done)
+		});
+		it("prepare-commit-msg", function(done){
+			hookTest("prepare-commit-msg", done)
+		});
+		it("commit-msg", function(done){
+			hookTest("commit-msg", done)
+		});
+		it("post-commit", function(done){
+			hookTest("post-commit", done)
+		});
+		it("pre-rebase", function(done){
+			hookTest("pre-rebase", done)
+		});
+		it("post-checkout", function(done){
+			hookTest("post-checkout", done)
+		});
+		it("post-merge", function(done){
+			hookTest("post-merge", done)
+		});
+		it("pre-receive", function(done){
+			hookTest("pre-receive", done)
+		});
+		it("update", function(done){
+			hookTest("update", done)
+		});
+		it("post-receive", function(done){
+			hookTest("post-receive", done)
+		});
+		it("post-update", function(done){
+			hookTest("post-update", done)
+		});
+		it("pre-auto-gc", function(done){
+			hookTest("pre-auto-gc", done)
+		});
+		it("post-rewrite", function(done){
+			hookTest("post-rewrite", done)
+		});
+
 	});
 
 	describe("not work for invalid hooks", function(){
 		var invalid = hooks.join();
 		it("like "+invalid, function(done){
-			run("hooks run "+invalid, function(err, stdout){
-				console.log(stdout);
-				done("fail");
+			run("hooks run "+invalid, function(err, stdout, stderr){
+				stderr.should.include("is not a valid hook");
+				done(err);
 			});
 		});
 	});

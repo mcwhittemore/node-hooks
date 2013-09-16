@@ -148,6 +148,7 @@ var installHooks = function(options){
 
 
 var hasGit = function(){
+	console.log(process.cwd());
 	return fs.existsSync(".git");
 }
 

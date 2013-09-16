@@ -49,11 +49,11 @@ Removes a `hook-module` from the default hooks.
 
 #### Options
 
-* --hook <GIT HOOK NAME>: remove module from specified git hook.
+* --hook {GIT HOOK NAME}: remove module from specified git hook.
 * --all-hooks: remove the module from all git hooks
 * --hard: Also removes the module from the project's devDependencies parameter.
 
-### hooks run <git-hook>
+### hooks run {git-hook}
 
 Runs a hook.
 
