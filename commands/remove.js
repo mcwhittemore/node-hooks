@@ -58,9 +58,6 @@ var main = function(args){
 		if(opts.hard){
 			removeFromPackage(opts);
 		}
-		else if(opts.global){
-			removeFromDefaults(opts);
-		}
 	}
 
 }
@@ -71,88 +68,50 @@ var removeFromHooks = function(opts){
 
 	var needsSave = false;
 
+	var processRemove = function(hook, strict){
+		opts.hook = hook;
+		if(opts.hook!="default" && hooksJson[opts.hook] != undefined && hooksJson[opts.hook][opts.module] != undefined){
+			delete hooksJson[opts.hook][opts.module];
+			needsSave = true;
+			removeMessage(opts.module, opts.hook, " hooks.json");
+		}
+		else if(strict){
+			console.log("Unable to remove ".red+("`"+opts.module+"`").cyan+" from ".red+("`"+opts.hook+"`").yellow);
+		}
+	}
+
 	if(opts.hook=="all"){
 		var allHooks = Object.keys(hooksJson);
 		for(var i=0; i<allHooks.length; i++){
-			if(hooksJson[allHooks[i]][opts.module]!=undefined){
-				removeMessage(opts.module, allHooks[i], " hooks.json");
-				delete hooksJson[allHooks[i]][opts.module];
-				needsSave = true;
-			}
+			processRemove(allHooks[i], false);
 		}
 	}
 	else{
 
 		if(opts.hook=="default"){
 			var moduleJson = require("../lib/hook-module-package")(opts.module);
-			if(moduleJson["default-hook"]==undefined){
+			if(moduleJson["valid-for"]==undefined || moduleJson["valid-for"].length==0){
 				console.log(("`"+opts.module+"` does not have a default hook. Use --hook to specify one").red);
 			}
-			else if(hooksJson[moduleJson["default-hook"]][opts.module]==undefined){
-				console.log(("`"+opts.module+"` has not been installed on its default hook.").red);
-			}
 			else{
-				opts.hook = moduleJson["default-hook"];
-			}
-		}
+				for(var i=0; i<moduleJson["valid-for"].length; i++){
+					if(hooksJson[moduleJson["valid-for"][i]][opts.module]!=undefined){
+						processRemove(moduleJson["valid-for"][i], true);
+					}
+				}
 
-		if(opts.hook!="default" && hooksJson[opts.hook] != undefined && hooksJson[opts.hook][opts.module] != undefined){
-			delete hooksJson[opts.hook][opts.module];
-			needsSave = true;
-			removeMessage(opts.module, opts.hook, " hooks.json");
+				if(needsSave){
+					console.log(("`"+opts.module+"` has not been installed on its default hook.").red);
+				}
+			}
 		}
 		else{
-			console.log("Unable to remove ".red+("`"+opts.module+"`").cyan+" from ".red+("`"+opts.hook+"`").yellow);
+			processRemove(opts.hook, true);
 		}
 	}
 
 	if(needsSave){
 		saveJson(hooksJsonFile, hooksJson, false); 
-	}
-}
-
-var removeFromDefaults = function(opts){
-	var defaults = require("../lib/default-modules");
-	var defaultsJsonFile = defaults.filename;
-	var defaultsJson = require(defaultsJsonFile);
-
-	var needsSave = false;
-
-	if(opts.hook=="all"){
-		var allHooks = Object.keys(defaultsJson.hooks);
-		for(var i=0; i<allHooks.length; i++){
-			if(defaultsJson.hooks[allHooks[i]][opts.module]!=undefined){
-				removeMessage(opts.module, allHooks[i], "user defaults");
-				delete defaultsJson.hooks[allHooks[i]][opts.module];
-				needsSave = true;
-			}
-		}
-	}
-	else if(opts.hook!="default" && defaultsJson.hooks[opts.hook]!= undefined && defaultsJson.hooks[opts.hook][opts.module] != undefined){
-		delete defaultsJson.hooks[opts.hook][opts.module];
-		needsSave = true;
-		removeMessage(opts.module, opts.hook, "user defaults");
-	}
-	else if(opts.hook=="default"){
-		var moduleJson = require("../lib/hook-module-package")(opts.module);
-		if(moduleJson["default-hook"]==undefined){
-			console.log(("`"+opts.module+"` does not have a default hook. Use --hook to specify one").red);
-		}
-		else if(defaultsJson.hooks[moduleJson["default-hook"]][opts.module]==undefined){
-			console.log(("`"+opts.module+"` has not been installed on its default hook.").red);
-		}
-		else{
-			delete defaultsJson.hooks[moduleJson["default-hook"]][opts.module];
-			needsSave = true;
-			removeMessage(opts.module, moduleJson["default-hook"], "user defaults");
-		}
-	}
-	else{
-		console.log("Unable to remove ".red+("`"+opts.module+"`").cyan+(" from `"+opts.hook+"`").red);
-	}
-
-	if(needsSave){
-		saveJson(defaultsJsonFile, defaultsJson, true); 
 	}
 }
 
