@@ -23,12 +23,13 @@ var main = function(args){
 						var data = require("../lib/hook-module-package")(node_module);
 						opts.name = node_module;
 						opts.version = data.version;
+						console.log()
 						isValidHookModule(data.json, function(err, success){
 							if(err){
 								console.log(err.red);
 								console.log(("`"+opts.hook_module+"`").red+" could not be added as it does not match the hook-module specification. If you want to override this be use the `-f` option.");
 							}
-							if(opts.hook=="default"){
+							else if(opts.hook=="default"){
 								var valids = [];
 
 								if(typeof data.json["hook-module"]["valid-for"]=="string"){

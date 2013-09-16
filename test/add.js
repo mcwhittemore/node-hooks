@@ -80,7 +80,6 @@ describe("hooks add", function(){
 			it("always", function(done){
 				run("hooks add "+local_valid_module, function(err){
 					var json = readJson(test_folder+"/package.json");
-					console.log(json);
 					json.dependencies.should.have.property("test-valid","../test-valid");
 					done(err);
 				});
