@@ -20,8 +20,8 @@ describe("hooks run should", function(){
 					done(err);
 				}
 				else{
-					run("hooks run "+hook, function(err, stdout,stderr){
-						stdout.should.include("this is a test");
+					run("hooks run "+hook, function(err, stdout, stderr){
+						stderr.should.include("this is a test");
 						done(err);
 					});
 				}
@@ -80,11 +80,19 @@ describe("hooks run should", function(){
 	});
 
 	describe("not work for invalid hooks", function(){
-		var invalid = hooks.join();
+		var invalid = hooks.join("");
 		it("like "+invalid, function(done){
-			run("hooks run "+invalid, function(err, stdout, stderr){
-				stderr.should.include("is not a valid git-hook");
-				done(err);
+			run("hooks add --soft --hook post-rewrite "+local_valid_module, function(err, stdout, stderr){
+				if(err){
+					console.log("here?");
+					done(err);
+				}
+				else{
+					run("hooks run "+invalid, function(err, stdout, stderr){
+						stderr.should.include("is not a valid git-hook");
+						done();
+					});
+				}
 			});
 		});
 	});
