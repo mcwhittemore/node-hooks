@@ -4,9 +4,11 @@ var colors = require("colors");
 
 var rootFolder = process.cwd();
 
+var hook;
+
 var main = function(args){
 
-	var hook = args[0];
+	hook = args[0];
 
 	var hooks = require("../lib/possible-hooks");
 
@@ -103,7 +105,7 @@ var prep = function(data, folder, callback){
 
 		var command = type=="shell" ? folder+"/"+main : type+" "+folder+"/"+main;
 
-		command += " \""+rootFolder+"\"";
+		command += " \""+hook+"\"";
 
 		enact(command, callback);
 	}
