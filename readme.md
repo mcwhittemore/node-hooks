@@ -38,7 +38,7 @@ It will also add node-hooks to the projects project.json devDependencies and nod
 
 ### hooks uninstall
 
-Uninstall hooks from the current working directory. Removes hooks.json, but does not touch package.json.
+Uninstall hooks from the current working directory. Removes hooks.json, but does not touch package.json or the node_module directory.
 
 ### hooks add {hook-module} [options]
 
@@ -68,7 +68,7 @@ Runs a hook.
 
 1. Rework globals
 	* ~/.hooks/global: hooks a user wants to run for all their projects
-5. Add `hooks skip hook-module` to skip globals
+1. Add `hooks skip hook-module` to skip globals
 
 ## Upcoming Commands
 
