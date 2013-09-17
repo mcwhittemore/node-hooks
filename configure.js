@@ -4,6 +4,7 @@ if(process.env.npm_config_global!=="true"){
 	var fs = require("fs");
 
 	if(fs.existsSync(process.cwd()+"/../.bin/hooks")){
+		//being installed a project folder
 		var exec = require("child_process").exec;
 		var command = "cd ../.. && "+process.cwd()+"/../.bin/hooks "+process.argv[2];
 		exec(command, function(err, stdout, stderr){
@@ -15,6 +16,7 @@ if(process.env.npm_config_global!=="true"){
 		});
 	}
 	else{
+		//being installed itself
 		require(process.cwd()+"/commands/"+process.argv[2])([]);
 	}
 
