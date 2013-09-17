@@ -13,6 +13,6 @@ Please fork this file and add as many tips as you can think of. Code samples wou
 For node:
 
 ```javascript
-var hook = process.argv[2]l
+var hook = process.argv[2];
 ```
 
