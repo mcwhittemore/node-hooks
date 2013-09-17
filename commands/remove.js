@@ -69,7 +69,6 @@ var removeFromHooks = function(opts){
 	var needsSave = false;
 
 	var processRemove = function(hook, strict){
-		console.log("REMOVING");
 		opts.hook = hook;
 		if(opts.hook!="default" && hooksJson[opts.hook] != undefined && hooksJson[opts.hook][opts.module] != undefined){
 			delete hooksJson[opts.hook][opts.module];
