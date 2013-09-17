@@ -27,8 +27,8 @@ var main = function(args){
 	if(git){
 		create(options);
 
-		if(!options.soft){
-			exec("NODE_HOOKS=DO_NOT_INSTALL npm install test-npm-install --save-dev", function(err, stdout, stderr){
+		if(!options.soft && process.env.npm_package_name != "node-hooks"){
+			exec("NODE_HOOKS=DO_NOT_INSTALL npm install node-hooks --save-dev", function(err, stdout, stderr){
 				if(stdout){
 					console.log(stdout);
 				}
@@ -106,7 +106,7 @@ var addDefaults = function(options){
 var createHooks = function(){
 
 
-	var baseContent = "#!/bin/sh" + "\n\n" + "./node_modules/.bin/hooks run";
+	var baseContent = fs.readFileSync(__dirname+"/../lib/hook-runner.sh", {encoding: "utf8"});
 	var hooks = require("../lib/possible-hooks");
 	var numHooks = hooks.length;
 
@@ -119,7 +119,7 @@ var createHooks = function(){
 			fs.renameSync(fileName, fileName+".old");
 		}
 
-		var content = baseContent + " " + hook;
+		var content = baseContent.replace("{hook-to-run}", hook);
 
 		createFile(fileName, content, true);
 	}
