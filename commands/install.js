@@ -19,12 +19,29 @@ var main = function(args){
 
 	var options = {};
 	options.addDefaults = args.indexOf("--add-defaults") != -1 ? true : false;
+	options.soft = args.indexOf("--soft") != -1 ? true : false;
 	options.hasHooksJson = hasHooksJson();
 	options.hasPackageJson = hasPackageJson();
 	options.defaultsAdded = false;
 
 	if(git){
 		create(options);
+
+		if(!options.soft){
+			exec("NODE_HOOKS=DO_NOT_INSTALL npm install test-npm-install --save-dev", function(err, stdout, stderr){
+				if(stdout){
+					console.log(stdout);
+				}
+
+				if(stderr){
+					console.error(stderr);
+				}
+
+				if(err){
+					process.exit(err.code);
+				}
+			});
+		}
 	}
 	else{
 		console.log("ERROR:".red+" hooks depends on "+ ".git".yellow);
@@ -128,7 +145,6 @@ var installHooks = function(options){
 		if(i<hooks.length){
 			var hook = hooks[i].name+"@"+hooks[i].version;
 			install(hook, function(success, node_module){
-
 				installHook(i+1, hooks, callback);
 			});
 		}
@@ -138,7 +154,7 @@ var installHooks = function(options){
 	}
 
 	var whenFinsihed = function(){
-		console.log("INSTALLED");
+		console.log("hooks".blue+" has been added to this project");
 	}
 
 	installHook(0, hooks, whenFinsihed);
@@ -148,7 +164,6 @@ var installHooks = function(options){
 
 
 var hasGit = function(){
-	console.log(process.cwd());
 	return fs.existsSync(".git");
 }
 

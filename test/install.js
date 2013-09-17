@@ -65,7 +65,7 @@ describe("hooks install", function(){
 				});
 			});
 
-			it("when its not created", function(done){
+			it.skip("when its not created", function(done){
 				var hooksJsonPath = test_folder+"/hooks.json";
 				var beforeJson = JSON.stringify({}, null, 2) + '\n';
 				run("hooks install", function(err, stdout){
@@ -75,7 +75,7 @@ describe("hooks install", function(){
 				});
 			});
 
-			it("but not when its filled out", function(done){
+			it.skip("but not when its filled out", function(done){
 				var hooksJsonPath = test_folder+"/hooks.json";
 				var beforeJson = JSON.stringify({update:[]}, null, 2) + '\n';
 
@@ -101,7 +101,13 @@ describe("hooks install", function(){
 
 			it("when its not created", function(done){
 				var packageJsonPath = test_folder+"/package.json";
-				var beforeJson = JSON.stringify({name:"default"}, null, 2) + '\n';
+				var obj = {
+					name:"default",
+					devDependencies: {
+						"node-hooks": "0.0.1"
+					}
+				}
+				var beforeJson = JSON.stringify(obj, null, 2) + '\n';
 				run("hooks install", function(err, stdout){
 					var afterJson = fs.readFileSync(packageJsonPath, "utf8");
 					afterJson.should.equal(beforeJson);
@@ -111,7 +117,13 @@ describe("hooks install", function(){
 
 			it("but not when its filled out", function(done){
 				var packageJsonPath = test_folder+"/package.json";
-				var beforeJson = JSON.stringify({update:[]}, null, 2) + '\n';
+				var obj = {
+					update:[],
+					devDependencies: {
+						"node-hooks": "0.0.1"
+					}
+				}
+				var beforeJson = JSON.stringify(obj, null, 2) + '\n';
 
 				fs.writeFile(packageJsonPath, beforeJson, function(err){
 					run("hooks install", function(err, stdout){

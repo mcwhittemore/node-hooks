@@ -1,5 +1,5 @@
 //stops install/uninstall command if on a global run
-if(process.env.npm_config_global!=="true"){
+if(process.env.npm_config_global!=="true" && process.env.NODE_HOOKS != "DO_NOT_INSTALL"){
 
 	var fs = require("fs");
 

@@ -1,33 +1,40 @@
 # Hooks
 
-An [NPM](https://github.com/isaacs/npm) for git hooks
+An [NPM](https://github.com/isaacs/npm) for git hooks.
 
 ## Terms
 
 * `hook-module`: Any module in npm that meets the `hook-module specification`. 
 * `hook-module specification`: A set of guidelines that define what it means to be a `hook-module`. [View here.](https://github.com/mcwhittemore/node-hooks/blob/master/docs/hook-module-specification.md)
-* `default hooks`: `hook-modules` that are added to a project on `hook init`.
 * `npm`: node package manager. This can be (and is) used for more things than node modules.
 * `npm-module`: a bit of code that can be downloaded via npm.
 * `package.json`: a required file for `npm-modules` defined [here](https://github.com/isaacs/npm/blob/master/doc/files/package.json.md).
 
+## Setup
 
-## Workflow
+```
+npm install -g node-hooks
+```
 
-This is just an example workflow for install and using hooks.
+## Use
 
-1. npm install -g node-hooks
-2. cd ./project-folder
-3. git init
-4. hooks install //sets up the hooks and installs defaults
-5. hooks add new-hook
-6. hooks remove unwanted-default-hooks
+```
+git init
+hooks install
+hooks add new-hook
+```
 
-## Help
+## Commands
 
 ### hooks install
 
-Installs hooks into the current working directory and seeds the hooks.json and package.json file if needed.
+Installs hooks into the current working directory, seeding the required hooks.json and package.json files if needed.
+
+It will also add node-hooks to the projects project.json devDependencies and node_modules folder so that all developers on the project will use the same hooks even if they don't have node-hooks installed locally.
+
+#### Options
+
+* --soft: stops install from adding hooks to the package.json devDependencies and node_modules. This is 
 
 ### hooks uninstall
 
