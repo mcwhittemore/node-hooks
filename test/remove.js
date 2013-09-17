@@ -14,7 +14,7 @@ describe("hooks remove from local file", function(){
 	});
 
 	describe("with no args", function(){
-		it("on an installed module should work", function(done){
+		it.only("on an installed module should work", function(done){
 			run("hooks remove "+local_valid_installed_name, function(err, stdout, stderr){
 				stdout.should.include("Removeing");
 				stdout.should.include("hooks.json");

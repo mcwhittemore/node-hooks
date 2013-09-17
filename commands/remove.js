@@ -69,6 +69,7 @@ var removeFromHooks = function(opts){
 	var needsSave = false;
 
 	var processRemove = function(hook, strict){
+		console.log("REMOVING");
 		opts.hook = hook;
 		if(opts.hook!="default" && hooksJson[opts.hook] != undefined && hooksJson[opts.hook][opts.module] != undefined){
 			delete hooksJson[opts.hook][opts.module];
@@ -95,12 +96,13 @@ var removeFromHooks = function(opts){
 			}
 			else{
 				for(var i=0; i<moduleJson["valid-for"].length; i++){
-					if(hooksJson[moduleJson["valid-for"][i]][opts.module]!=undefined){
+					var hook = moduleJson["valid-for"][i]
+					if(hooksJson[hook] && hooksJson[hook][opts.module]){
 						processRemove(moduleJson["valid-for"][i], true);
 					}
 				}
 
-				if(needsSave){
+				if(!needsSave){
 					console.log(("`"+opts.module+"` has not been installed on its default hook.").red);
 				}
 			}
