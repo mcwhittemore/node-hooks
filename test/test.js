@@ -7,17 +7,20 @@ var fs = require("fs");
 run = function(command, callback){
 
 	var hookCommand = "node "+process.cwd()+"/bin/hooks.js ";
+
+	var mods = [
+		["hooks ", hookCommand],
+		["--all-"+hookCommand, "--all-hooks "],
+		[".git/"+hookCommand, ".git/hooks "]
+	]
+
 	var oldCommand;
-
-	do{
-		oldCommand = command;
-		command = command.replace("hooks ", hookCommand);
-	}while(oldCommand!=command);
-
-	do{
-		oldCommand = command;
-		command = command.replace(".git/"+hookCommand, ".git/hooks");
-	}while(oldCommand!=command);
+	for(var i=0; i<mods.length; i++){
+		do{
+			oldCommand = command;
+			command = command.replace(mods[i][0], mods[i][1]);
+		} while(oldCommand!=command);
+	}
 
 	try{
 		exec("cd "+test_folder+" && "+command, callback);
