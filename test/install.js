@@ -99,7 +99,7 @@ describe("hooks install", function(){
 				});
 			});
 
-			it("when its not created", function(done){
+			it.skip("when its not created", function(done){
 				var packageJsonPath = test_folder+"/package.json";
 				var obj = {
 					name:"default",
