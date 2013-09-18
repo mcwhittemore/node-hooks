@@ -157,8 +157,8 @@ var addToFiles = function(opts){
 		if(opts.depend){
 			var packageJsonFile = process.cwd()+"/package.json";
 			var packageJson = require(packageJsonFile);
-			packageJson.dependencies = packageJson.dependencies == undefined ? {} : packageJson.dependencies;
-			packageJson.dependencies[opts.name] = opts.version;
+			packageJson.devDependencies = packageJson.devDependencies == undefined ? {} : packageJson.devDependencies;
+			packageJson.devDependencies[opts.name] = opts.version;
 			saveJson(packageJsonFile, packageJson, false);
 		}
 

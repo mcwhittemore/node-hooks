@@ -75,12 +75,13 @@ describe("hooks add", function(){
 			});
 		});
 
-		describe("and include the module in package.json dependencies", function(){
-			// * --depend: adds the module to the project's package.json dependencies parameter.
+		describe("and include the module in package.json devDependencies", function(){
+			// * --depend: adds the module to the project's package.json devDependencies parameter.
 			it("always", function(done){
 				run("hooks add "+local_valid_module, function(err){
 					var json = readJson(test_folder+"/package.json");
-					json.dependencies.should.have.property("test-valid","../test-valid");
+					json.should.have.property("devDependencies");
+					json.devDependencies.should.have.property("test-valid","../test-valid");
 					done(err);
 				});
 			});
