@@ -24,6 +24,10 @@ hooks install
 hooks add new-hook
 ```
 
+## Available Hooks on NPM
+
+* pull-checkout-merge-command.hook: Run scripts after certain git commands are used. Great for compiled source mangeagement between branches and automating magrations.
+
 ## How to write a git hooks for `Hooks`
 
 The [hook-module sepcs](https://github.com/mcwhittemore/node-hooks/blob/master/docs/hook-module-specification.md) should cover some of the basics while the [hook-module best practices](https://github.com/mcwhittemore/node-hooks/blob/master/docs/hook-module-best-practices.md) doc will help you avoid trip ups.
@@ -108,3 +112,10 @@ Lists the module hooks as they are currently set up in the active project
 ### hooks search key words
 
 does an npm search for modules tagged git-hooks
+
+## Change Log
+
+### 0.0.4
+
+* Adding availabe hooks section to readme
+* Starting change log

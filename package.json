@@ -1,6 +1,6 @@
 {
   "name": "node-hooks",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "preferGlobal": true,
   "description": "An NPM for git hooks.",
   "main": "./bin/hooks.js",
