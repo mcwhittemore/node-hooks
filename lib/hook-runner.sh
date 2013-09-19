@@ -3,21 +3,24 @@
 var hook = "{hook-to-run}";
 
 var fs = require("fs");
-var exec = function(stub){
-	var command = stub+" run "+hook;
-	//console.log("COMMAND", command);
-	require("child_process").exec(command, function(err, stdout, stderr){
-		if(stdout){
-			console.log(stdout);
-		}
+var exec = function(command){
 
-		if(stderr){
-			console.error(stderr);
-		}
+	var hooks = require("child_process").spawn(command, ["run", hook]);
 
-		if(err){
-			process.exit(err.code);
-		}
+	hooks.stderr.on("data", function(data){
+		process.stderr.write(data);
+	});
+
+	hooks.stdout.on("data", function(data){
+		process.stdout.write(data);
+	});
+
+	hooks.on("error", function(){
+		console.error("error", arguments);
+	})
+
+	hooks.on("close", function(code){
+		process.exit(code);
 	});
 }
 
