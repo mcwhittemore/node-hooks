@@ -21,7 +21,7 @@ describe("hooks run should", function(){
 				}
 				else{
 					run("hooks run "+hook, function(err, stdout, stderr){
-						stderr.should.include("this is a test");
+						stdout.should.include("this is a test");
 						done(err);
 					});
 				}

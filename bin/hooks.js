@@ -1,8 +1,6 @@
 #!/usr/bin/env node
 ;(function () { // wrapper in case we're in module_context mode
 
-	console.log("Here we are");
-
 	var commands = [
 		"help",
 		"install",

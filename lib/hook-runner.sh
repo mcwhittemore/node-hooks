@@ -3,7 +3,7 @@
 var hook = "{hook-to-run}";
 
 var fs = require("fs");
-var exec = function(command){
+var spawn = function(command){
 
 	var hooks = require("child_process").spawn(command, ["run", hook]);
 
@@ -27,16 +27,16 @@ var exec = function(command){
 
 if(fs.existsSync("./node_modules/.bin/hooks")){
 	//console.log("node_modules");
-	exec("./node_modules/.bin/hooks");
+	spawn("./node_modules/.bin/hooks");
 }
 else{
 	var pack = require(process.cwd()+"/package.json");
 	if(pack.name=="node-hooks" && fs.existsSync(process.cwd()+"/bin/hooks.js")){
 		//console.log("local");
-		exec("node "+process.cwd()+"/bin/hooks.js");
+		spawn("node "+process.cwd()+"/bin/hooks.js");
 	}
 	else{
 		//console.log("global");
-		exec("hooks");
+		spawn("hooks");
 	}
 }
