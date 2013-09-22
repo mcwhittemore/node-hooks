@@ -1,1 +1,1 @@
-console.log("this is a test");
+console.log("this is a test of", process.argv.slice(2)[0]);

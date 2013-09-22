@@ -1,11 +1,15 @@
 #!/usr/bin/env node
 
 var hook = "{hook-to-run}";
+var hookArgs = process.argv.slice(2);
 
 var fs = require("fs");
 var spawn = function(command){
 
-	var hooks = require("child_process").spawn(command, ["run", hook]);
+
+	var args = ["run", hook].concat(hookArgs);
+
+	var hooks = require("child_process").spawn(command, args);
 
 	hooks.stderr.on("data", function(data){
 		process.stderr.write(data);
