@@ -15,14 +15,15 @@ var main = function(args){
 
 	//TODO: Add defaults to hooks.json
 
-	var git = hasGit();
 
 	var options = {};
-	options.addDefaults = args.indexOf("--add-defaults") != -1 ? true : false;
-	options.soft = args.indexOf("--soft") != -1 ? true : false;
+	//options.addDefaults = args.indexOf("--add-defaults") == -1 ? false : true;
+	options.soft = args.indexOf("--soft") == -1 ? false : true;
+	options.bare = args.indexOf("--bare") == -1 ? false : true;
 	options.hasHooksJson = hasHooksJson();
 	options.hasPackageJson = hasPackageJson();
-	options.defaultsAdded = false;
+
+	var git = hasGit(options.bare);
 
 	if(git){
 		create(options);
@@ -44,8 +45,9 @@ var main = function(args){
 		}
 	}
 	else{
-		console.log("ERROR:".red+" hooks depends on "+ ".git".yellow);
-		console.log("       Please run "+"`git init`".yellow+" before "+"`hooks install`".yellow);
+		console.log("ERROR:".red+" hooks depends on "+ "git".yellow);
+		var bare = options.bare ? " --bare" : "";
+		console.log("       Please run "+("`git init"+bare+"`").yellow+" before "+"`hooks install`".yellow);
 		process.exit(1);
 	}
 }
@@ -58,9 +60,6 @@ var create = function(options){
 	}
 	else if(!options.hasHooksJson){
 		createHooksJson(options);
-	}
-	else if(options.addDefaults && !options.defaultsAdded){
-		addDefaults(options);
 	}
 	else{
 		createHooks(options);
@@ -88,32 +87,19 @@ var createHooksJson = function(options){
 	});
 }
 
-
-var addDefaults = function(options){
-	var defaults = require("../lib/default-modules");
-	if(defaults.json!=undefined){
-		//console.log("DEFAULTS", defaults.json);
-		console.log("TODO: ADD AND INSTALL DEFAULTS".yellow);
-	}
-	else{
-		console.error("DEFAULTS FILE IS MISSING".red);
-	}
-
-	options.defaultsAdded = true;
-	create(options);
-}
-
-var createHooks = function(){
+var createHooks = function(options){
 
 
 	var baseContent = fs.readFileSync(__dirname+"/../lib/hook-runner.sh", {encoding: "utf8"});
 	var hooks = require("../lib/possible-hooks");
 	var numHooks = hooks.length;
 
+	var baseFileName = options.bare == true ? "./hooks/" : "./.git/hooks/";
+
 	while(numHooks--){
 		var hook = hooks[numHooks];
 
-		var fileName = "./.git/hooks/"+hook;
+		var fileName = baseFileName+hook;
 
 		if(fs.existsSync(fileName)){
 			fs.renameSync(fileName, fileName+".old");
@@ -163,8 +149,22 @@ var installHooks = function(options){
 /** ================================================================================ **/
 
 
-var hasGit = function(){
-	return fs.existsSync(".git");
+var hasGit = function(bare){
+	if(!bare){
+		return fs.existsSync(".git") && hasHooksFolder(bare);
+	}
+	else{
+		return hasHooksFolder(bare);
+	}
+}
+
+var hasHooksFolder = function(bare){
+	if(bare){
+		return fs.existsSync("hooks");
+	}
+	else{
+		return fs.existsSync(".git/hooks");
+	}
 }
 
 var hasHooksJson = function(){
