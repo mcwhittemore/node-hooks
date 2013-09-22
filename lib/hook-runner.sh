@@ -6,7 +6,6 @@ var hookArgs = process.argv.slice(2);
 var fs = require("fs");
 var spawn = function(command){
 
-
 	var args = ["run", hook].concat(hookArgs);
 
 	var hooks = require("child_process").spawn(command, args);

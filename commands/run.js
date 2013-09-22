@@ -35,18 +35,18 @@ var main = function(args){
 			}
 
 			if(options[hook]!=undefined){
-				queue(hook, Object.keys(options[hook]), options[hook]);
+				queue(args, Object.keys(options[hook]), options[hook]);
 			}
 		}
 
 	});
 }
 
-var queue = function(hook, keys, commands){
+var queue = function(args, keys, commands){
 
 	var key = keys[0];
 
-	open(hook, key, commands[key], function(err, exit_code){
+	open(args, key, commands[key], function(err, exit_code){
 		if(err){
 			console.error("ERROR ENACTING `", key, "`", err);
 			process.exit(1);
@@ -66,7 +66,7 @@ var queue = function(hook, keys, commands){
 	});
 }
 
-var open = function(hook, name, path, callback){
+var open = function(args, name, path, callback){
 	var folder = "node_modules/"+name;
 	fs.readFile(folder+"/package.json", function(err, data){
 		if(err){
@@ -75,17 +75,17 @@ var open = function(hook, name, path, callback){
 					callback("CANNOT FIND `", name, "`");
 				}
 				else{
-					prep(hook, data, path, callback);
+					prep(args, data, path, callback);
 				}
 			});
 		}
 		else{
-			prep(hook, data, folder, callback);
+			prep(args, data, folder, callback);
 		}
 	});
 }
 
-var prep = function(hook, data, folder, callback){
+var prep = function(args, data, folder, callback){
 	var options = undefined;
 
 	try{
@@ -99,22 +99,23 @@ var prep = function(hook, data, folder, callback){
 		var file = options["main"] || "index.js";
 		var type = options["hook-module"]!=undefined ? options["hook-module"]["script-type"] || "node" : "node";
 
-		enact(hook, type, folder+"/"+file, callback);
+		enact(args, type, folder+"/"+file, callback);
 	}
 }
 
-var enact = function(hook, type, file, callback){
+var enact = function(args, type, file, callback){
+
 
 	var command = type == "shell" ? file : type;
 
-	var args = [];
+	var commandArgs = [];
 	if(command!=file){
-		args.push(file);
+		commandArgs.push(file);
 	}
 
-	args.push(hook);
+	commandArgs = commandArgs.concat(args);
 
-	var hook = spawn(command, args);
+	var hook = spawn(command, commandArgs);
 		
 	hook.stderr.on("data", function(data){
 		process.stderr.write(data);
