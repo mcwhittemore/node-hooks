@@ -1,6 +1,6 @@
 {
   "name": "node-hooks",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "preferGlobal": true,
   "description": "An NPM for git hooks.",
   "main": "./bin/hooks.js",
@@ -8,8 +8,7 @@
     "test": "test"
   },
   "dependencies": {
-    "colors": "~0.6.1",
-    "commands": "0.0.7"
+    "colors": "~0.6.1"
   },
   "devDependencies": {
     "mocha": "~1.12.0",
