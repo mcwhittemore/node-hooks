@@ -1,39 +1,46 @@
 #!/usr/bin/env node
 
 var hook = "{hook-to-run}";
+var hookArgs = process.argv.slice(2);
 
 var fs = require("fs");
-var exec = function(stub){
-	var command = stub+" run "+hook;
-	//console.log("COMMAND", command);
-	require("child_process").exec(command, function(err, stdout, stderr){
-		if(stdout){
-			console.log(stdout);
-		}
+var spawn = function(command){
 
-		if(stderr){
-			console.error(stderr);
-		}
 
-		if(err){
-			process.exit(err.code);
-		}
+	var args = ["run", hook].concat(hookArgs);
+
+	var hooks = require("child_process").spawn(command, args);
+
+	hooks.stderr.on("data", function(data){
+		process.stderr.write(data);
+	});
+
+	hooks.stdout.on("data", function(data){
+		process.stdout.write(data);
+	});
+
+	hooks.on("error", function(){
+		console.error("error", arguments);
+	})
+
+	hooks.on("close", function(code){
+		process.exit(code);
 	});
 }
 
 
 if(fs.existsSync("./node_modules/.bin/hooks")){
 	//console.log("node_modules");
-	exec("./node_modules/.bin/hooks");
+	spawn("./node_modules/.bin/hooks");
 }
 else{
 	var pack = require(process.cwd()+"/package.json");
 	if(pack.name=="node-hooks" && fs.existsSync(process.cwd()+"/bin/hooks.js")){
 		//console.log("local");
-		exec("node "+process.cwd()+"/bin/hooks.js");
+		spawn("node "+process.cwd()+"/bin/hooks.js");
 	}
 	else{
 		//console.log("global");
-		exec("hooks");
+		spawn("hooks");
 	}
 }

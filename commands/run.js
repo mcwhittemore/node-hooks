@@ -1,14 +1,13 @@
 var fs = require("fs");
 var exec = require('child_process').exec;
+var spawn = require("child_process").spawn;
 var colors = require("colors");
 
 var rootFolder = process.cwd();
 
-var hook;
-
 var main = function(args){
 
-	hook = args[0];
+	var hook = args[0];
 
 	var hooks = require("../lib/possible-hooks");
 
@@ -21,6 +20,7 @@ var main = function(args){
 		
 		if(err){
 			console.error("ERROR READING `hook.json`".red);
+			console.log(">> "+"Has hooks been merged into this branch?".blue);
 			process.exit(1);
 		}
 		else{
@@ -35,28 +35,24 @@ var main = function(args){
 			}
 
 			if(options[hook]!=undefined){
-				queue(Object.keys(options[hook]), options[hook]);
+				queue(hook, Object.keys(options[hook]), options[hook]);
 			}
 		}
 
 	});
 }
 
-var queue = function(keys, commands){
+var queue = function(hook, keys, commands){
 
 	var key = keys[0];
 
-	open(key, commands[key], function(err, result){
+	open(hook, key, commands[key], function(err, exit_code){
 		if(err){
 			console.error("ERROR ENACTING `", key, "`", err);
 			process.exit(1);
 		}
-		else if(result.code==1){
-			console.error(result.message);
-			process.exit(1);
-		}
-		else if(result.message!=undefined){
-			console.error(result.message);
+		else if(exit_code!=0){
+			process.exit(exit_code);
 		}
 
 		keys = keys.slice(1);
@@ -70,7 +66,7 @@ var queue = function(keys, commands){
 	});
 }
 
-var open = function(name, path, callback){
+var open = function(hook, name, path, callback){
 	var folder = "node_modules/"+name;
 	fs.readFile(folder+"/package.json", function(err, data){
 		if(err){
@@ -79,17 +75,17 @@ var open = function(name, path, callback){
 					callback("CANNOT FIND `", name, "`");
 				}
 				else{
-					prep(data, path, callback);
+					prep(hook, data, path, callback);
 				}
 			});
 		}
 		else{
-			prep(data, folder, callback);
+			prep(hook, data, folder, callback);
 		}
 	});
 }
 
-var prep = function(data, folder, callback){
+var prep = function(hook, data, folder, callback){
 	var options = undefined;
 
 	try{
@@ -100,53 +96,42 @@ var prep = function(data, folder, callback){
 	}
 
 	if(options){
-		var main = options["main"] || "index.js";
-		var type = options["type"] || "node";
+		var file = options["main"] || "index.js";
+		var type = options["hook-module"]!=undefined ? options["hook-module"]["script-type"] || "node" : "node";
 
-		var command = type=="shell" ? folder+"/"+main : type+" "+folder+"/"+main;
-
-		command += " \""+hook+"\"";
-
-		enact(command, callback);
+		enact(hook, type, folder+"/"+file, callback);
 	}
 }
 
-var enact = function(command, callback){
+var enact = function(hook, type, file, callback){
 
-	var info = {
-		err: undefined,
-		stdout: undefined,
-		stderr: undefined,
-		exec_finished: false,
-		exit_code: undefined,
-		exit_signal: undefined,
-		exit_happend: false
+	var command = type == "shell" ? file : type;
+
+	var args = [];
+	if(command!=file){
+		args.push(file);
 	}
 
-	var close = function(){
-		if(info.exec_finished && info.exit_happend){
-			var message = info.stdout || info.stderr || info.exit_signal;
-			var code = info.exit_code !=0 ? 1 : 0;
-			callback(null, {code:code, message:message});
-		}
-	}
+	args.push(hook);
 
-	var action = exec(command, function(err, stdout, stderr){
-		info.err = err;
-		info.stdout = stdout;
-		info.stderr = stderr;
-		info.exec_finished = true;
-
-		close();
+	var hook = spawn(command, args);
+		
+	hook.stderr.on("data", function(data){
+		process.stderr.write(data);
 	});
 
-	action.on("exit", function(code, signal){
-		info.exit_code = code;
-		info.exit_signal = signal;
-		info.exit_happend = true;
-
-		close();
+	hook.stdout.on("data", function(data){
+		process.stdout.write(data);
 	});
+
+	hook.on("error", function(err){
+		console.error("HOOKS:", err.message);
+	})
+
+	hook.on("close", function(code){
+		callback(undefined, code);
+	});
+
 }
 
 module.exports = main;

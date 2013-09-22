@@ -46,7 +46,8 @@ It will also add node-hooks to the projects project.json devDependencies and nod
 
 #### Options
 
-* --soft: stops install from adding hooks to the package.json devDependencies and node_modules. This is 
+* --soft: stops install from adding hooks to the package.json devDependencies and node_modules.
+* --bare: updates folder dependency checks to reflect that of a git --bare repo.
 
 ### hooks uninstall
 
@@ -119,3 +120,9 @@ does an npm search for modules tagged git-hooks
 
 * Adding availabe hooks section to readme
 * Starting change log
+
+### 0.0.5
+
+* Pass args on to hook-moduless
+* Provide --bare command for install hooks into bare repos
+* Started move towards using spawn rather than exec from child_process.

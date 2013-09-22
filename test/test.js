@@ -11,7 +11,8 @@ run = function(command, callback){
 	var mods = [
 		["hooks ", hookCommand],
 		["--all-"+hookCommand, "--all-hooks "],
-		[".git/"+hookCommand, ".git/hooks "]
+		[".git/"+hookCommand, ".git/hooks "],
+		["./"+hookCommand, "./hooks "]
 	]
 
 	var oldCommand;
@@ -40,11 +41,18 @@ cleanUp = function(callback){
 }
 
 setUp = function(callback){
-	exec("mkdir "+test_folder, function(err, stdout, stderr){
+	cleanUp(function(err){
 		if(err){
-			console.log(stderr);
+			callback(err);
 		}
-		callback(err);
+		else{
+			exec("mkdir "+test_folder, function(err, stdout, stderr){
+				if(err){
+					console.log(stderr);
+				}
+				callback(err);
+			});
+		}
 	});
 }
 
