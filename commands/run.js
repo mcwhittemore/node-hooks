@@ -21,7 +21,7 @@ var main = function(args){
 		if(err){
 			console.error("ERROR READING `hook.json`".red);
 			console.log(">> "+"Has hooks been merged into this branch?".blue);
-			process.exit(1);
+			process.exit(0);
 		}
 		else{
 			var options;

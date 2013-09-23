@@ -33,10 +33,17 @@ if(fs.existsSync("./node_modules/.bin/hooks")){
 	spawn("./node_modules/.bin/hooks");
 }
 else{
-	var pack = require(process.cwd()+"/package.json");
-	if(pack.name=="node-hooks" && fs.existsSync(process.cwd()+"/bin/hooks.js")){
-		//console.log("local");
-		spawn("node "+process.cwd()+"/bin/hooks.js");
+	var packPath = process.cwd()+"/package.json";
+	if(fs.existsSync(packPath)){
+		var pack = require(packPath);
+		if(pack.name=="node-hooks" && fs.existsSync(process.cwd()+"/bin/hooks.js")){
+			//console.log("local");
+			spawn("node "+process.cwd()+"/bin/hooks.js");
+		}
+		else{
+			//console.log("global");
+			spawn("hooks");
+		}
 	}
 	else{
 		//console.log("global");
