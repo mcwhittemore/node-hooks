@@ -126,3 +126,8 @@ does an npm search for modules tagged git-hooks
 * Pass args on to hook-moduless
 * Provide --bare command for install hooks into bare repos
 * Started move towards using spawn rather than exec from child_process.
+
+### 0.0.7
+
+* Update to shell script to avoid failure if package.json is not found.
+* Update to run, not exiting if hooks.json can't be found.
