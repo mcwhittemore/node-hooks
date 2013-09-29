@@ -29,12 +29,14 @@ var showAll = function(data){
 	while(i--){
 		showOne(hook_modules[i], data[hook_modules[i]]);
 	}
+	console.log(">".blue, "If you do not see a hook here that you want please feel free to build your own:".green);
+	console.log(">".blue, "\t", "https://github.com/mcwhittemore/node-hooks/tree/master/docs".yellow);
 }
 
 var showOne = function(name, data){
 	console.log(">".blue ,name.green);
 	console.log(">".blue ,data.desc.yellow);
-	console.log(">".blue ,"Applicable Git Hooks".yellow);
+	console.log(">".blue ,"Works with:".yellow);
 	for(var i=0; i<data["valid-for"].length; i++){
 		console.log(">".blue ,"\t", data["valid-for"][i].blue);
 	}
