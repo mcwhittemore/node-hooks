@@ -46,10 +46,10 @@ describe("hooks add", function(){
 			});
 		})
 
-		describe("to specified hook via should work", function(){
+		describe("to specified hook via", function(){
 			// * --hook <GIT HOOK NAME>: this option overrides the hook-module's default-hook parameter.
 			it("--hook should work", function(done){
-				run("hooks add --hook update "+local_valid_module, function(err, stdout){
+				run("hooks add --hook update "+local_valid_module, function(err, stdout, stderr){
 					stdout.should.include(" complete".green);
 					var hooksJson = readJson(test_folder+"/hooks.json");
 					hooksJson.should.have.property("update");
@@ -82,6 +82,25 @@ describe("hooks add", function(){
 					var json = readJson(test_folder+"/package.json");
 					json.should.have.property("devDependencies");
 					json.devDependencies.should.have.property("test-valid","../test-valid");
+					done(err);
+				});
+			});
+		});
+
+		describe("and include the module in hooks.json file for the right hook", function(){
+			it("when coming from NPM", function(done){
+				run("hooks add -f --hook update "+npm_invalid_module, function(err, stdout, stderr){
+					stdout.should.include("complete");
+					var hooksJson = readJson(test_folder+"/hooks.json");
+					hooksJson.update.should.have.property("test-npm-install", "0.0.0");
+					done(err);
+				});
+			});
+			it("when coming from remote url", function(done){
+				run("hooks add -f --hook update "+github_invalid_module, function(err, stdout, stderr){
+					stdout.should.include("complete");
+					var hooksJson = readJson(test_folder+"/hooks.json");
+					hooksJson.update.should.have.property("test-npm-install", github_invalid_module);
 					done(err);
 				});
 			});

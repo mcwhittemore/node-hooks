@@ -17,13 +17,16 @@ var main = function(args){
 	var opts = setupOptions(args);		
 	if(opts.valid){
 		if(hasHooksJson() && !opts.global){	
-			install(opts.hook_module, function(success, node_module){
+			install(opts.hook_module, function(success, node_module, module_version){
 				if(success){
+					var data = require("../lib/hook-module-package")(node_module);
+					opts.name = node_module;
+					opts.version = module_version;
+					var localFile = process.cwd()+"/"+opts.hook_module;
+					if(fs.existsSync(localFile)){
+						opts.version = opts.hook_module;
+					}
 					if(!opts.force){
-						var data = require("../lib/hook-module-package")(node_module);
-						opts.name = node_module;
-						opts.version = data.version;
-						console.log()
 						isValidHookModule(data.json, function(err, success){
 							if(err){
 								console.log(err.red);
