@@ -26,7 +26,7 @@ hooks add new-hook
 
 ## Available Hooks on NPM
 
-* pull-checkout-merge-command.hook: Run scripts after certain git commands are used. Great for compiled source mangeagement between branches and automating magrations.
+`hooks list`
 
 ## How to write a git hooks for `Hooks`
 
@@ -73,6 +73,14 @@ Removes a `hook-module` from the default hooks.
 * --all-hooks: remove the module from all git hooks
 * --hard: Also removes the module from the project's devDependencies parameter.
 
+### hooks list
+
+Lists the hook modules registered with node-hooks.
+
+### hooks search key words
+
+does an npm search for modules tagged git-hooks
+
 ### hooks run {git-hook}
 
 Runs a hook.
@@ -85,13 +93,12 @@ Runs a hook.
 
 ## Upcoming Commands
 
-### globals
-
-* hooks install --global
-* hooks uninstall --global
-* hooks add --global
-* hooks remove --global
-* hooks run --global
+* hooks add --global: Add a hook module to the global scope.
+* hooks remove --global: Remove a hook module from the global scope.
+* hooks run --global: Run a hook module that is in the global scope.
+* hooks list --global: Lists the hook modules in your global scope.
+* hooks list --local: Lists the hook modules as they are setup in the current project.
+* hooks list --hook {git-hook}: limits results to hook modules for the specified git hook.
 
 ### hooks skip {hook-module} [options]
 
@@ -101,18 +108,6 @@ Remove a modules from the project (hooks remove --all-hooks) and forces a skip i
 
 * --hook {GIT HOOK NAME}: remove module from specified git hook.
 * --all-hooks: remove the module from all git hooks
-
-### hooks list [options]
-
-Lists the module hooks as they are currently set up in the active project
-
-#### Options
-
-* --global: Lists the module hooks as they are currently setup in the defaults folder.
-
-### hooks search key words
-
-does an npm search for modules tagged git-hooks
 
 ## Change Log
 
@@ -131,3 +126,7 @@ does an npm search for modules tagged git-hooks
 
 * Update to shell script to avoid failure if package.json is not found.
 * Update to run, not exiting if hooks.json can't be found.
+
+### 0.0.8
+
+* Bug fix concerning adding npm data to the hooks.json file
