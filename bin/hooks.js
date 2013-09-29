@@ -7,7 +7,8 @@
 		"uninstall",
 		"run",
 		"add",
-		"remove"
+		"remove",
+		"list"
 	]
 
 	var run = function(args){

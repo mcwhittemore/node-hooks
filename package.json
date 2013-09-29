@@ -8,7 +8,8 @@
     "test": "test"
   },
   "dependencies": {
-    "colors": "~0.6.1"
+    "colors": "~0.6.1",
+    "request": "~2.27.0"
   },
   "devDependencies": {
     "mocha": "~1.12.0",
