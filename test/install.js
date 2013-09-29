@@ -147,7 +147,7 @@ describe("hooks install", function(){
 				var obj = {
 					name:"default",
 					devDependencies: {
-						"node-hooks": "0.0.1"
+						"node-hooks": "0.0.8"
 					}
 				}
 				var beforeJson = JSON.stringify(obj, null, 2) + '\n';
@@ -163,7 +163,7 @@ describe("hooks install", function(){
 				var obj = {
 					update:[],
 					devDependencies: {
-						"node-hooks": "0.0.1"
+						"node-hooks": "0.0.8"
 					}
 				}
 				var beforeJson = JSON.stringify(obj, null, 2) + '\n';
