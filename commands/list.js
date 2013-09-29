@@ -30,7 +30,7 @@ var showAll = function(data){
 		showOne(hook_modules[i], data[hook_modules[i]]);
 	}
 	console.log(">".blue, "If you do not see a hook here that you want please feel free to build your own:".green);
-	console.log(">".blue, "\t", "https://github.com/mcwhittemore/node-hooks/tree/master/docs".yellow);
+	console.log(">".blue, "\t", "https://github.com/mcwhittemore/node-hooks/blob/dev/docs/readme.md".yellow);
 }
 
 var showOne = function(name, data){
