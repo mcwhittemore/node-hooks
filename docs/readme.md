@@ -6,6 +6,10 @@ Some git-hooks also pass around their own arguments. If the hook that is being r
 
 One of the powers of git hooks is being able to stop the git process if something seems wrong. To do that with hooks, send an exit code of 1.
 
+**Listing your Hook Module in Hooks**
+
+Please issue a pull request this [list.json](https://github.com/mcwhittemore/node-hooks/blob/master/list.json) file.
+
 ## Example: Node.js
 
 **index.js**
