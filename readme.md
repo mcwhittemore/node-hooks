@@ -30,7 +30,9 @@ hooks add new-hook
 
 ## How to write a git hooks for `Hooks`
 
-The [hook-module sepcs](https://github.com/mcwhittemore/node-hooks/blob/master/docs/hook-module-specification.md) should cover some of the basics while the [hook-module best practices](https://github.com/mcwhittemore/node-hooks/blob/master/docs/hook-module-best-practices.md) doc will help you avoid trip ups.
+Check out this README for a quick intro. For more depth checkout the [hook-module sepcs](https://github.com/mcwhittemore/node-hooks/blob/master/docs/hook-module-specification.md) which covers the hook module requirements.
+
+There is also a [hook-module best practices](https://github.com/mcwhittemore/node-hooks/blob/master/docs/hook-module-best-practices.md) doc which should help you avoid trip ups.
 
 ## Is there a way to search npm for hook-modules only?
 
