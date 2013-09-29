@@ -6,11 +6,13 @@ Some git-hooks also pass around their own arguments. If the hook that is being r
 
 One of the powers of git hooks is being able to stop the git process if something seems wrong. To do that with hooks, send an exit code of 1.
 
-## Example
+## Example: Node.js
+
+**index.js**
 
 ```
 //define what hooks your module is valid for.
-var validHooks = ["post-checkout", "post-commit"];
+var validHooks = ["post-checkout", "pre-commit"];
 
 //get the hook that is being run
 var hook = process.argv[2];
@@ -29,5 +31,22 @@ else if(hook=="post-checkout"){
 else{
 	console.log("Thanks for running "+hook+". Currently this is not implemented.");
 	process.exit(1);
+}
+```
+
+**package.json**
+
+```
+{
+	"name": "example-hook-module.hook",
+	"version": "0.0.0",
+	"description": "a hook that won't let you commit, and prints hook data for a checkout",
+	"hook-module": {
+	    "script-type": "node",
+	    "valid-for": [
+	      "pre-commit",
+	      "post-checkout"
+	    ]
+	 }
 }
 ```
