@@ -2,6 +2,8 @@
 
 An [NPM](https://github.com/isaacs/npm) for git hooks.
 
+![nook-hooks download history](https://nodei.co/npm-dl/node-hooks.png)
+
 ## Terms
 
 * `hook-module`: Any module in npm that meets the `hook-module specification`. 
