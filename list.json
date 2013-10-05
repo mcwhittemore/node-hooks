@@ -16,7 +16,7 @@
 		"valid-for": ["pre-commit"],
 		"sources": {
 			"npm": "beautify.hks"
-		}
+		},
 		"author": "Matthew Chase Whittemore <mcwhittemore@gmail.com>"
 	}
 }
