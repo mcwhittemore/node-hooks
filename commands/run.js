@@ -110,8 +110,6 @@ var enact = function(args, type, file, callback) {
 
     var hook = spawn(command, commandArgs);
 
-    console.log("sing");
-
     hook.stdin.on("data", function(data) {
         process.stdin.write(data);
         console.log("woot");

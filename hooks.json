@@ -1,1 +1,5 @@
-{}
+{
+  "pre-commit": {
+    "beautify.hks": "0.0.1"
+  }
+}
