@@ -18,5 +18,13 @@
 			"npm": "beautify.hks"
 		},
 		"author": "Matthew Chase Whittemore <mcwhittemore@gmail.com>"
+	},
+	"esprima.hks": {
+		"desc": "Validate your javascript with each commit",
+		"valid-for": ["pre-commit"],
+		"sources": {
+			"npm": "esprima.hks"
+		},
+		"author": "Matthew Chase Whittemore <mcwhittemore@gmail.com>"
 	}
 }
