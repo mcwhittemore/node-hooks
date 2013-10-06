@@ -2,13 +2,21 @@
 	"pull-checkout-merge-command.hook": {
 		"desc": "Run scripts after `pull`, `merge` and `checkout` succeed. Great for compiled source management between branches and automating migrations",
 		"valid-for": [
-      		"post-merge",
-      		"post-checkout"
-    	],
-    	"sources": {
-    		"npm": "pull-checkout-merge-command.hook",
-    		"github": "https://github.com/mcwhittemore/pull-checkout-merge-command.hook/tarball/master"
-    	},
-    	"author": "Matthew Chase Whittemore <mcwhittemore@gmail.com>"
+      			"post-merge",
+      			"post-checkout"
+    		],
+    		"sources": {
+    			"npm": "pull-checkout-merge-command.hook",
+    			"github": "https://github.com/mcwhittemore/pull-checkout-merge-command.hook/tarball/master"
+    		},
+    		"author": "Matthew Chase Whittemore <mcwhittemore@gmail.com>"
+	},
+	"beautify.hks": {
+		"desc": "Beautify your javascript with each commit",
+		"valid-for": ["pre-commit"],
+		"sources": {
+			"npm": "beautify.hks"
+		},
+		"author": "Matthew Chase Whittemore <mcwhittemore@gmail.com>"
 	}
 }
