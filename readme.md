@@ -134,3 +134,7 @@ Remove a modules from the project (hooks remove --all-hooks) and forces a skip i
 ### 0.0.8
 
 * Bug fix concerning adding npm data to the hooks.json file
+
+### 0.0.10
+
+* Bug fix concerning multiple hook-modules running from the same hook
