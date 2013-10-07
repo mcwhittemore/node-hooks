@@ -19,7 +19,7 @@ var main = function(args) {
     fs.readFile("hooks.json", function(err, data) {
 
         if (err) {
-            console.error("ERROR READING `hook.json`".red);
+            console.error("ERROR READING `hooks.json`".red);
             console.log(">> " + "Has hooks been merged into this branch?".blue);
             process.exit(0);
         } else {
@@ -28,7 +28,7 @@ var main = function(args) {
             try {
                 options = JSON.parse(data);
             } catch (err) {
-                console.error("ERROR PARSING `hook.json`".red, err);
+                console.error("ERROR PARSING `hooks.json`".red, err);
                 process.exit(1);
             }
 
