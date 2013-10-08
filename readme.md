@@ -143,3 +143,7 @@ Remove a modules from the project (hooks remove --all-hooks) and forces a skip i
 
 * Moving all child_process not related to npm away from child_process.exec to child_process.spawn and directing child_process stdout to console.
 
+### 0.0.12
+
+* Hooks-module installation is now handled by npm-installer rather than a child_process.exec
+
