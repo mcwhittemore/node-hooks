@@ -139,3 +139,7 @@ Remove a modules from the project (hooks remove --all-hooks) and forces a skip i
 
 * Bug fix concerning multiple hook-modules running from the same hook
 
+### 0.0.11
+
+* Moving all child_process not related to npm away from child_process.exec to child_process.spawn and directing child_process stdout to console.
+
