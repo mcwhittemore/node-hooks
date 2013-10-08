@@ -12,7 +12,9 @@
   },
   "devDependencies": {
     "mocha": "~1.12.0",
-    "should": "1.2.2"
+    "should": "1.2.2",
+    "beautify.hks": "0.0.1",
+    "esprima.hks": "0.0.0"
   },
   "scripts": {
     "test": "mocha",

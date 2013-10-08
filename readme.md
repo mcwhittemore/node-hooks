@@ -137,6 +137,5 @@ Remove a modules from the project (hooks remove --all-hooks) and forces a skip i
 
 ### 0.0.10
 
-* Adding config command to make it simple to run the config.js file of a hook module.
-* Adding shameless email list signup to install
-* Moving the configure.js function to a spawn convention vs the old exec convention.
+* Bug fix concerning multiple hook-modules running from the same hook
+
