@@ -25,19 +25,30 @@ var main = function(args) {
         create(options);
 
         if (!options.soft && process.env.npm_package_name != "node-hooks") {
-            exec("NODE_HOOKS=DO_NOT_INSTALL npm install node-hooks --save-dev", function(err, stdout, stderr) {
-                if (stdout) {
-                    console.log(stdout);
-                }
 
-                if (stderr) {
-                    console.error(stderr);
-                }
+            // exec("NODE_HOOKS=DO_NOT_INSTALL npm install node-hooks --save-dev", function(err, stdout, stderr) {
+            //     if (stdout) {
+            //         console.log(stdout);
+            //     }
 
+            //     if (stderr) {
+            //         console.error(stderr);
+            //     }
+
+            //     if (err) {
+            //         process.exit(err.code);
+            //     }
+            // });
+
+            require("npm-installer")("node-hooks", function(err, result) {
                 if (err) {
-                    process.exit(err.code);
+                    console.log("HOOKS:".blue + " node-hooks install error".red);
+                    process.exit(1);
+                } else {
+
                 }
             });
+
         }
     } else {
         console.log("ERROR:".red + " hooks depends on " + "git".yellow);
