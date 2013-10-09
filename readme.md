@@ -147,3 +147,8 @@ Remove a modules from the project (hooks remove --all-hooks) and forces a skip i
 
 * Hooks-module installation is now handled by npm-installer rather than a child_process.exec
 
+### 0.0.13
+
+* Cleaned up code a bit and started commenting command files.
+* Added console.log with a google signup form to the install process.
+* Updated help command to ask people to help me and direct them to the docs.
