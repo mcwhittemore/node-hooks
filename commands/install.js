@@ -169,6 +169,8 @@ var installHooks = function(options) {
 
         } else {
             console.log("hooks".blue + " has been added to this project");
+            console.log("\n\n\tInterested in learning more about hooks?".yellow);
+            console.log("\tCheckout this link:".yellow + " http://bit.ly/npm-for-git-hooks".blue + "\n\n");
         }
     }
 
