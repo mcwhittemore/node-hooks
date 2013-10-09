@@ -1,30 +1,36 @@
 var fs = require("fs");
 var exec = require("child_process").exec;
 var colors = require("colors");
+
+/** =============================== INTERNAL MODULES =============================== **/
+
 var install = require("../lib/install-module");
 
-/** ================================================================================ **/
+/** ================================== FILE PATHS ================================== **/
 
-var packageJsonPath = process.cwd() + "/package.json";
-var hooksJsonPath = process.cwd() + "/hooks.json";
+var packageJsonFile = process.cwd() + "/package.json";
+var hooksJsonFile = process.cwd() + "/hooks.json";
 
 /** ================================================================================ **/
 
 var main = function(args) {
 
-    //TODO: Add defaults to hooks.json
+    //setting up options. this should be moved to a module for this.
     var options = {};
     options.soft = args.indexOf("--soft") == -1 ? false : true;
     options.bare = args.indexOf("--bare") == -1 ? false : true;
     options.hasHooksJson = hasHooksJson();
     options.hasPackageJson = hasPackageJson();
 
-    var git = hasGit(options.bare);
+    //is valid git folder
+    if (hasGit(options.bare)) {
 
-    if (git) {
+        //build out required files 
         create(options);
 
+        //add hooks to the local package.json and installed into node_modules
         if (!options.soft && process.env.npm_package_name != "node-hooks") {
+            //this needs to be moved to npm-installer
             exec("NODE_HOOKS=DO_NOT_INSTALL npm install node-hooks --save-dev", function(err, stdout, stderr) {
                 if (stdout) {
                     console.log(stdout);
@@ -49,72 +55,88 @@ var main = function(args) {
 
 /** ================================================================================ **/
 
+//NOTE: this function is part of a multi function recurse
 var create = function(options) {
+    //build package.json
     if (!options.hasPackageJson) {
         createPackageJson(options);
+        //build hooks.json
     } else if (!options.hasHooksJson) {
         createHooksJson(options);
     } else {
+        //create the ./git/hooks files
         createHooks(options);
+        //install hooks currently in hooks.json
         installHooks(options);
     }
 }
 
+//if the cwd doesn't have a package.json file start creating one.
 var createPackageJson = function(options) {
     var packageJson = {
         name: "default"
-    };
+    }
 
     var jsonString = JSON.stringify(packageJson, null, 2) + '\n';
-    createFile(packageJsonPath, jsonString, false, function() {
+    createFile(packageJsonFile, jsonString, false, function() {
         options.hasPackageJson = true;
         create(options);
     });
 }
 
+//if the cwd doesn't have a hooks.json file start creating one.
 var createHooksJson = function(options) {
     var defaultHooksJson = {};
 
     var jsonString = JSON.stringify(defaultHooksJson, null, 2) + '\n';
-    createFile(hooksJsonPath, jsonString, false, function() {
+    createFile(hooksJsonFile, jsonString, false, function() {
         options.hasHooksJson = true;
         create(options);
     });
 }
 
+//create the .git/hooks files
 var createHooks = function(options) {
 
-
+    //load up hook-runner.sh
+    //NOTE: this is JS. the .sh on this file is just because its got a #!/usr/bin/env node
     var baseContent = fs.readFileSync(__dirname + "/../lib/hook-runner.sh", {
         encoding: "utf8"
     });
-    var hooks = require("../lib/possible-hooks");
-    var numHooks = hooks.length;
 
-    var baseFileName = options.bare == true ? "./hooks/" : "./.git/hooks/";
+    //load all the possible hook files
+    var possibleHooks = require("../lib/possible-hooks");
+    var numHooks = possibleHooks.length;
+
+    //create file path to hooks directory
+    var filePath = options.bare == true ? "./hooks/" : "./.git/hooks/";
 
     while (numHooks--) {
-        var hook = hooks[numHooks];
+        var hook = possibleHooks[numHooks];
 
-        var fileName = baseFileName + hook;
+        var fileName = filePath + hook;
 
+        //archive current hooks if it needs to be saved
         if (fs.existsSync(fileName)) {
             fs.renameSync(fileName, fileName + ".old");
         }
 
         var content = baseContent.replace("{hook-to-run}", hook);
 
+        //create exicutable file
         createFile(fileName, content, true);
     }
 }
 
 var installHooks = function(options) {
-    var hooksJson = require(hooksJsonPath);
+    //load hooks file
+    var hooksJson = require(hooksJsonFile);
 
     var hooks = [];
 
     var hookTypes = require("../lib/possible-hooks");
 
+    //get all the hooks that need to be installed out of the hooks.json file
     for (var i = 0; i < hookTypes.length; i++) {
         if (hooksJson[hookTypes[i]] != undefined) {
             var hookNames = Object.keys(hooksJson[hookTypes[i]]);
@@ -127,54 +149,67 @@ var installHooks = function(options) {
         }
     }
 
-    var installHook = function(i, hooks, callback) {
+    //recurse through hooks | the async loop
+    var installHook = function(i, hooks) {
         if (i < hooks.length) {
-            var hook = hooks[i].name + "@" + hooks[i].version;
+            var hook;
+
+            //if version is a vector, install this version of the hook-module
+            if (hooks[i].version.match(/\d\.\d\.\d/) != null) {
+                hook = hooks[i].name + "@" + hooks[i].version;
+            }
+            //else assume its a file path and install that
+            else {
+                hook = hooks[i].version;
+            }
+
             install(hook, function(success, node_module) {
-                installHook(i + 1, hooks, callback);
+                installHook(i + 1, hooks);
             });
+
         } else {
-            callback();
+            console.log("hooks".blue + " has been added to this project");
         }
     }
 
-    var whenFinsihed = function() {
-        console.log("hooks".blue + " has been added to this project");
-    }
-
-    installHook(0, hooks, whenFinsihed);
+    //start the async loop
+    installHook(0, hooks);
 }
 
-/** ================================================================================ **/
+/** ================================== CHECKERS ================================== **/
 
 
 var hasGit = function(bare) {
     if (!bare) {
+        //if were not bare, git should be in .git
         return fs.existsSync(".git") && hasHooksFolder(bare);
     } else {
+        //if we are bare, the hooks folder is all that matter
         return hasHooksFolder(bare);
     }
 }
 
 var hasHooksFolder = function(bare) {
     if (bare) {
+        //if we're bare the folder should be on the same level
         return fs.existsSync("hooks");
     } else {
+        //if we're not bare it should be hidden it .git
         return fs.existsSync(".git/hooks");
     }
 }
 
 var hasHooksJson = function() {
-    return fs.existsSync(hooksJsonPath);
+    return fs.existsSync(hooksJsonFile);
 }
 
 var hasPackageJson = function() {
-    return fs.existsSync(packageJsonPath);
+    return fs.existsSync(packageJsonFile);
 }
 
-/** ================================================================================ **/
+/** ============================================================================== **/
 
-
+//used to create files, complex so it can created exicutable files
 var createFile = function(fileName, content, chmodX, callback) {
     var fileMade = function(err) {
         if (err) {
@@ -199,66 +234,5 @@ var createFile = function(fileName, content, chmodX, callback) {
     fs.writeFile(fileName, content, fileMade);
 }
 
-/** ================================================================================ **/
-
 
 module.exports = main;
-
-
-
-var forTheGlobalFile = function() {
-    var version = "0.0.0";
-
-    var start = function() {
-        var defaults = require("./lib/default-modules");
-
-        if (defaults.json == undefined) {
-            defaults.json = {};
-        }
-
-        if (defaults.json.version != version) {
-            var old_version = defaults.json.version;
-            upgrade(defaults.json, function(data) {
-                defaults.json = data;
-                defaults.save(function() {
-                    if (old_version) {
-                        console.log("UPGRADE SUCCESSFULL");
-                    } else {
-                        console.log("INSTALLATION SUCCESSFULL");
-                    }
-                });
-            });
-        }
-    }
-
-
-    var upgrade = function(data, callback) {
-
-        switch (data.version) {
-            case undefined:
-                data.version = "0.0.0";
-                data.hooks = {
-                    "applypatch-msg": {},
-                    "pre-applypatch": {},
-                    "post-applypatch": {},
-                    "pre-commit": {},
-                    "prepare-commit-msg": {},
-                    "commit-msg": {},
-                    "post-commit": {},
-                    "pre-rebase": {},
-                    "post-checkout": {},
-                    "post-merge": {},
-                    "pre-receive": {},
-                    "update": {},
-                    "post-receive": {},
-                    "post-update": {},
-                    "pre-auto-gc": {},
-                    "post-rewrite": {}
-                }
-        }
-
-        callback(data);
-    }
-
-    start();
-}
