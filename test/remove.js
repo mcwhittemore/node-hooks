@@ -7,7 +7,7 @@ describe("hooks remove from local file", function() {
         beforeEach(function(done) {
             cleanUp(function() {
                 setUp(function() {
-                    run("mkdir .git && mkdir .git/hooks && hooks init && hooks install && hooks add " + local_valid_module, function(err, stdout, stderr) {
+                    run("mkdir .git && mkdir .git/hooks && hooks init && hooks install && hooks install " + local_valid_module, function(err, stdout, stderr) {
                         done(err);
                     });
                 });
@@ -58,7 +58,7 @@ describe("hooks remove from local file", function() {
     describe("with the --hook arg", function() {
         //* --hook <GIT HOOK NAME>: remove module from specified git hook.
         it("should remove the hook if it exhists", function(done) {
-            run("hooks add --hook post-commit " + local_valid_module, function(err) {
+            run("hooks install --hook post-commit " + local_valid_module, function(err) {
                 if (err) {
                     done(err);
                 } else {

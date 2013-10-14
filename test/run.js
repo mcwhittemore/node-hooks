@@ -8,7 +8,7 @@ describe("[hooks run]", function() {
             this.timeout = 100000;
             cleanUp(function() {
                 setUp(function() {
-                    run("git init && hooks init && hooks install && hooks add --soft --hook pre-commit " + local_valid_module, function(err) {
+                    run("git init && hooks init && hooks install && hooks install --soft --hook pre-commit " + local_valid_module, function(err) {
                         done(err);
                     });
                 });
@@ -55,7 +55,7 @@ describe("[hooks run]", function() {
 
         describe("work for", function() {
             var hookTest = function(hook, done) {
-                run("hooks add --soft --hook " + hook + " " + local_valid_module, function(err, stdout, stderr) {
+                run("hooks install --soft --hook " + hook + " " + local_valid_module, function(err, stdout, stderr) {
                     if (err) {
                         done(err);
                     } else {
@@ -121,7 +121,7 @@ describe("[hooks run]", function() {
         describe("not work for invalid hooks", function() {
             var invalid = hooks.join("");
             it("like " + invalid, function(done) {
-                run("hooks add --soft --hook post-rewrite " + local_valid_module, function(err, stdout, stderr) {
+                run("hooks install --soft --hook post-rewrite " + local_valid_module, function(err, stdout, stderr) {
                     if (err) {
                         console.log("here?");
                         done(err);

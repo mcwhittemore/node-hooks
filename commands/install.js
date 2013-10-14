@@ -15,10 +15,13 @@ var hooksJsonFile = process.cwd() + "/hooks.json";
 var main = function(args) {
     //load hooks file
 
-    if (fs.existsSync(hooksJsonFile)) {
+    if (args.length != 0) {
+        require("./add.js")(args);
+    } else if (fs.existsSync(hooksJsonFile)) {
         installFromHooksJson();
     } else {
         console.log("HOOKS: ".blue + "Nothing to install!".yellow);
+        console.log("HOOKS: ".blue + "As of 0.0.15 the hooks setup process has been moved to" + "`hooks init`".yellow);
     }
 
 }
