@@ -1,3 +1,10 @@
+//this is an abstraction that helps me circumvent the npm install script when I need to.
+//this file sucks, this process sucks and while I admit its a huge tell that I shouldn't be
+//doing this this way, I haven't started solving that problem yet.
+//one possible solution is to look at making a `hooks init` that does a bunch of the install stuff.
+//and than moving the `hooks add` and `hooks install` command together.
+//this would be closer to the npm api.
+
 //stops install/uninstall command if on a global run
 if (process.env.npm_config_global !== "true" && process.env.NODE_HOOKS != "DO_NOT_INSTALL") {
 

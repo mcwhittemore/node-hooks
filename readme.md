@@ -147,3 +147,14 @@ Remove a modules from the project (hooks remove --all-hooks) and forces a skip i
 
 * Hooks-module installation is now handled by npm-installer rather than a child_process.exec
 
+### 0.0.13
+
+* Cleaned up code a bit and started commenting command files.
+* Added console.log with a google signup form to the install process.
+* Updated help command to ask people to help me and direct them to the docs.
+
+### 0.0.14
+
+* Finshed commenting out the main files
+* Reworked hook-module-validator to have a clearer workflow
+* Moved hook-runner.sh to hook-runner.js so to be clearer to fellow contribtures
