@@ -1,184 +1,120 @@
-describe("hooks install", function(){
+describe("[hooks install] should", function() {
 
-	describe("won't run without a", function(){
+    var fs = require("fs");
 
-		before(function(done){
-			setUp(done);
-		});
+    before(function(done) {
+        setUp(function() {
+            run("mkdir .git", function(e) {
+                run("mkdir .git/hooks", function(ee) {
+                    run("hooks install", function(eee) {
+                        var err = e || ee || eee;
+                        done(err);
+                    });
+                });
+            });
+        });
+    });
 
-		it(".git folder", function(done){
-			run("hooks install", function(err, stdout, stderr){
-				err.should.have.property("code", 1);
-				stdout.should.include("ERROR:".red+" hooks depends on "+ "git".yellow);
-				done();
-			});
-		});
+    describe("update the .git/hooks folder to contain a file called", function() {
 
-		it(".git/hooks folder", function(done){
-			run("hooks install", function(err, stdout, stderr){
-				err.should.have.property("code", 1);
-				stdout.should.include("ERROR:".red+" hooks depends on "+ "git".yellow);
-				done();
-			});
-		});
+        var hooks = require("../lib/possible-hooks");
+        var numHooks = hooks.length;
 
-		after(function(done){
-			cleanUp(done);
-		});
-	});
+        while (numHooks--) {
+            var hook = hooks[numHooks];
+            it(hook, function() {
+                fs.existsSync(test_folder + "/.git/hooks/" + hook).should.be.true;
+            });
+        }
 
-	describe("--bare", function(){
+    });
 
-		before(function(done){
-			setUp(done);
-		});
+    describe("perserve the current hooks", function() {
+        it.skip("once i get to it", function() {
+            //TODO: implment .git/hook preservation
+        });
+    });
 
-		it("won't install without a hooks folder", function(done){
-			run("hooks install --bare", function(err, stdout, stderr){
-				err.should.have.property("code", 1);
-				stdout.should.include("ERROR:".red+" hooks depends on "+ "git".yellow);
-				stdout.should.include("git init --bare");
-				done();
-			});
-		});
+    describe("set the hooks.json file to a blank object", function() {
 
-		it("will install without a .git folder", function(done){
-			run("mkdir ./hooks", function(err){
-				if(err){
-					done(err);
-				}
-				else{
-					run("hooks install --bare", function(err, stdout, stderr){
-						stdout.should.not.include("ERROR:".red+" hooks depends on "+ "git".yellow);
-						done(err);
-					});
-				}
-			});
-		});
+        beforeEach(function(done) {
+            var hooksJsonPath = test_folder + "/hooks.json";
+            run("rm " + hooksJsonPath, function() {
+                done();
+            });
+        });
 
-		after(function(done){
-			cleanUp(done);
-		});
-	});
+        it.skip("when its not created", function(done) {
+            var hooksJsonPath = test_folder + "/hooks.json";
+            var beforeJson = JSON.stringify({}, null, 2) + '\n';
+            run("hooks install", function(err, stdout) {
+                var afterJson = fs.readFileSync(hooksJsonPath, "utf8");
+                afterJson.should.equal(beforeJson);
+                done(err);
+            });
+        });
 
+        it.skip("but not when its filled out", function(done) {
+            var hooksJsonPath = test_folder + "/hooks.json";
+            var beforeJson = JSON.stringify({
+                update: []
+            }, null, 2) + '\n';
 
-	describe("should", function(){
+            fs.writeFile(hooksJsonPath, beforeJson, function(err) {
+                run("hooks install", function(err, stdout) {
+                    var afterJson = fs.readFileSync(hooksJsonPath, "utf8");
+                    afterJson.should.equal(beforeJson);
+                    done(err);
+                });
+            });
+        });
 
-		var fs = require("fs");
+    });
 
-		before(function(done){
-			setUp(function(){
-				run("mkdir .git", function(e){
-					run("mkdir .git/hooks", function(ee){
-						run("hooks install", function(eee){
-							var err = e || ee || eee;
-							done(err);
-						});
-					});
-				});
-			});
-		});
+    describe("set the package.json file to an object with the name default", function() {
 
-		describe("update the .git/hooks folder to contain a file called", function(){
+        beforeEach(function(done) {
+            var packageJsonPath = test_folder + "/package.json";
+            run("rm " + packageJsonPath, function() {
+                done();
+            });
+        });
 
-			var hooks = require("../lib/possible-hooks");
-			var numHooks = hooks.length;
+        it.skip("when its not created", function(done) {
+            var packageJsonPath = test_folder + "/package.json";
+            var obj = {
+                name: "default",
+                devDependencies: {
+                    "node-hooks": "0.0.8"
+                }
+            }
+            var beforeJson = JSON.stringify(obj, null, 2) + '\n';
+            run("hooks install", function(err, stdout) {
+                var afterJson = fs.readFileSync(packageJsonPath, "utf8");
+                afterJson.should.equal(beforeJson);
+                done(err);
+            });
+        });
 
-			while(numHooks--){
-				var hook = hooks[numHooks];
-				it(hook, function(){
-					fs.existsSync(test_folder+"/.git/hooks/"+hook).should.be.true;
-				});
-			}
+        it("but not when its filled out", function(done) {
+            var packageJsonPath = test_folder + "/package.json";
+            var obj = {
+                update: [],
+                devDependencies: {
+                    "node-hooks": "0.0.8"
+                }
+            }
+            var beforeJson = JSON.stringify(obj, null, 2) + '\n';
 
-		});
+            fs.writeFile(packageJsonPath, beforeJson, function(err) {
+                run("hooks install", function(err, stdout) {
+                    var afterJson = fs.readFileSync(packageJsonPath, "utf8");
+                    afterJson.should.equal(beforeJson);
+                    done(err);
+                });
+            });
+        });
 
-		describe("perserve the current hooks", function(){
-			it.skip("once i get to it", function(){
-				//TODO: implment .git/hook preservation
-			});
-		});
-
-		describe("set the hooks.json file to a blank object", function(){
-
-			beforeEach(function(done){
-				var hooksJsonPath = test_folder+"/hooks.json";
-				run("rm "+hooksJsonPath, function(){
-					done();
-				});
-			});
-
-			it.skip("when its not created", function(done){
-				var hooksJsonPath = test_folder+"/hooks.json";
-				var beforeJson = JSON.stringify({}, null, 2) + '\n';
-				run("hooks install", function(err, stdout){
-					var afterJson = fs.readFileSync(hooksJsonPath, "utf8");
-					afterJson.should.equal(beforeJson);
-					done(err);
-				});
-			});
-
-			it.skip("but not when its filled out", function(done){
-				var hooksJsonPath = test_folder+"/hooks.json";
-				var beforeJson = JSON.stringify({update:[]}, null, 2) + '\n';
-
-				fs.writeFile(hooksJsonPath, beforeJson, function(err){
-					run("hooks install", function(err, stdout){
-						var afterJson = fs.readFileSync(hooksJsonPath, "utf8");
-						afterJson.should.equal(beforeJson);
-						done(err);
-					});
-				});
-			});
-
-		});
-
-		describe("set the package.json file to an object with the name default", function(){
-
-			beforeEach(function(done){
-				var packageJsonPath = test_folder+"/package.json";
-				run("rm "+packageJsonPath, function(){
-					done();
-				});
-			});
-
-			it.skip("when its not created", function(done){
-				var packageJsonPath = test_folder+"/package.json";
-				var obj = {
-					name:"default",
-					devDependencies: {
-						"node-hooks": "0.0.8"
-					}
-				}
-				var beforeJson = JSON.stringify(obj, null, 2) + '\n';
-				run("hooks install", function(err, stdout){
-					var afterJson = fs.readFileSync(packageJsonPath, "utf8");
-					afterJson.should.equal(beforeJson);
-					done(err);
-				});
-			});
-
-			it("but not when its filled out", function(done){
-				var packageJsonPath = test_folder+"/package.json";
-				var obj = {
-					update:[],
-					devDependencies: {
-						"node-hooks": "0.0.8"
-					}
-				}
-				var beforeJson = JSON.stringify(obj, null, 2) + '\n';
-
-				fs.writeFile(packageJsonPath, beforeJson, function(err){
-					run("hooks install", function(err, stdout){
-						var afterJson = fs.readFileSync(packageJsonPath, "utf8");
-						afterJson.should.equal(beforeJson);
-						done(err);
-					});
-				});
-			});
-
-		});
-
-	});
+    });
 
 });
