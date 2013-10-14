@@ -11,7 +11,7 @@ describe("hooks add", function() {
             //reset the folder to empty
             cleanUp(function() {
                 setUp(function() {
-                    run("mkdir .git && mkdir .git/hooks && hooks install", function(err, stdout, stderr) {
+                    run("mkdir .git && mkdir .git/hooks && hooks init && hooks install", function(err, stdout, stderr) {
                         done(err);
                     });
                 });

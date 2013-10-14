@@ -1,4 +1,4 @@
-describe.only("[hooks init]", function() {
+describe("[hooks init]", function() {
     describe("won't run without a", function() {
 
         before(function(done) {

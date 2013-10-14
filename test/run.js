@@ -8,7 +8,7 @@ describe("[hooks run]", function() {
             this.timeout = 100000;
             cleanUp(function() {
                 setUp(function() {
-                    run("git init && hooks install && hooks add --soft --hook pre-commit " + local_valid_module, function(err) {
+                    run("git init && hooks init && hooks install && hooks add --soft --hook pre-commit " + local_valid_module, function(err) {
                         done(err);
                     });
                 });
@@ -46,7 +46,7 @@ describe("[hooks run]", function() {
             this.timeout = 100000;
             cleanUp(function() {
                 setUp(function() {
-                    run("git init && hooks install", function(err) {
+                    run("git init && hooks init && hooks install", function(err) {
                         done(err);
                     });
                 });
