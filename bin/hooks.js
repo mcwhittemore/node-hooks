@@ -8,10 +8,10 @@
     var commands = [
         "help",
         "init",
+        "add",
         "install",
         "uninstall",
         "run",
-        "add",
         "remove",
         "list",
         "--version",
@@ -21,7 +21,8 @@
     //vanity commands routed to real commands
     var vanity_routes = {
         "--version": "version",
-        "-v": "version"
+        "-v": "version",
+        "add": "install"
     }
 
     //split off default node args
