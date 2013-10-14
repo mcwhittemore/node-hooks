@@ -100,7 +100,7 @@ var createHooks = function(options) {
 
     //load up hook-runner.sh
     //NOTE: this is JS. the .sh on this file is just because its got a #!/usr/bin/env node
-    var baseContent = fs.readFileSync(__dirname + "/../lib/hook-runner.sh", {
+    var baseContent = fs.readFileSync(__dirname + "/../lib/hook-runner.js", {
         encoding: "utf8"
     });
 
