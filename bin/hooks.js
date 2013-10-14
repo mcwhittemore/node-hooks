@@ -1,10 +1,13 @@
 #!/usr/bin/env node
-;(function() {
+
+;
+(function() {
     process.title = "hooks";
 
     //available external commands
     var commands = [
         "help",
+        "init",
         "install",
         "uninstall",
         "run",
