@@ -25,7 +25,7 @@ npm install -g node-hooks
 ```
 git init
 hooks init
-hooks add new-hook
+hooks install new-hook
 ```
 
 **Else**
@@ -65,7 +65,7 @@ It will also add node-hooks to the projects project.json devDependencies and nod
 
 Installs all hook-modules from hooks.json into the current working directory.
 
-### hooks add {hook-module} [options]
+### hooks install {hook-module} [options]
 
 Adds an npm module to the local hooks project if the `hook module's` package.json fits the `hook-module specification` below. By default the module will be added to the hook specified in the module's package.json "default-hook" parameter and to the project's package.json devDependencies parameter.
 
@@ -74,6 +74,10 @@ Adds an npm module to the local hooks project if the `hook module's` package.jso
 * --hook {GIT HOOK NAME}: this option overrides the hook-module's default-hook parameter.
 * -f, --force: installs a module from npm even if it doesn't meet the `hooks-module specification`. Requires the --hook option
 * --soft: don't add the module to the package.json
+
+### hooks add {hook-module} [options]
+
+See `hooks install {hook-module} [options]`
 
 ### hooks uninstall
 
@@ -109,7 +113,7 @@ Runs a hook.
 
 ## Upcoming Commands
 
-* hooks add --global: Add a hook module to the global scope.
+* hooks install --global: Add a hook module to the global scope.
 * hooks remove --global: Remove a hook module from the global scope.
 * hooks run --global: Run a hook module that is in the global scope.
 * hooks list --global: Lists the hook modules in your global scope.
@@ -127,37 +131,18 @@ Remove a modules from the project (hooks remove --all-hooks) and forces a skip i
 
 ## Change Log
 
-### 0.0.4
+### 0.0.15
 
-* Adding availabe hooks section to readme
-* Starting change log
+* Moved the setup parts of install to init.
+* Mapped add to install in the api router.
+* Forced install to route to add if args are provided.
+* Reordered changelog to make it more readable as it grows
 
-### 0.0.5
+### 0.0.14
 
-* Pass args on to hook-moduless
-* Provide --bare command for install hooks into bare repos
-* Started move towards using spawn rather than exec from child_process.
-
-### 0.0.7
-
-* Update to shell script to avoid failure if package.json is not found.
-* Update to run, not exiting if hooks.json can't be found.
-
-### 0.0.8
-
-* Bug fix concerning adding npm data to the hooks.json file
-
-### 0.0.10
-
-* Bug fix concerning multiple hook-modules running from the same hook
-
-### 0.0.11
-
-* Moving all child_process not related to npm away from child_process.exec to child_process.spawn and directing child_process stdout to console.
-
-### 0.0.12
-
-* Hooks-module installation is now handled by npm-installer rather than a child_process.exec
+* Finshed commenting out the main files
+* Reworked hook-module-validator to have a clearer workflow
+* Moved hook-runner.sh to hook-runner.js so to be clearer to fellow contribtures
 
 ### 0.0.13
 
@@ -165,8 +150,36 @@ Remove a modules from the project (hooks remove --all-hooks) and forces a skip i
 * Added console.log with a google signup form to the install process.
 * Updated help command to ask people to help me and direct them to the docs.
 
-### 0.0.14
+### 0.0.12
 
-* Finshed commenting out the main files
-* Reworked hook-module-validator to have a clearer workflow
-* Moved hook-runner.sh to hook-runner.js so to be clearer to fellow contribtures
+* Hooks-module installation is now handled by npm-installer rather than a child_process.exec
+
+### 0.0.11
+
+* Moving all child_process not related to npm away from child_process.exec to child_process.spawn and directing child_process stdout to console.
+
+### 0.0.10
+
+* Bug fix concerning multiple hook-modules running from the same hook
+
+### 0.0.8
+
+* Bug fix concerning adding npm data to the hooks.json file
+
+### 0.0.7
+
+* Update to shell script to avoid failure if package.json is not found.
+* Update to run, not exiting if hooks.json can't be found.
+
+### 0.0.5
+
+* Pass args on to hook-moduless
+* Provide --bare command for install hooks into bare repos
+* Started move towards using spawn rather than exec from child_process.
+
+### 0.0.4
+
+* Adding availabe hooks section to readme
+* Starting change log
+
+
