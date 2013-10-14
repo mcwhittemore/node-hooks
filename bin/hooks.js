@@ -1,39 +1,44 @@
 #!/usr/bin/env node
-;(function () { // wrapper in case we're in module_context mode
 
-	var commands = [
-		"help",
-		"install",
-		"uninstall",
-		"run",
-		"add",
-		"remove",
-		"list"
-	]
+;
+(function() {
+    process.title = "hooks";
 
-	var run = function(args){
+    //available external commands
+    var commands = [
+        "help",
+        "install",
+        "uninstall",
+        "run",
+        "add",
+        "remove",
+        "list",
+        "--version",
+        "-v"
+    ]
 
-		if(commands.indexOf(args[0])!=-1){
-			require("../commands/"+args[0])(args.slice(1));
-		}
-		else if(args[0]=="--version"){
-			require("../commands/version")(true);
-		}
-		else{
-			console.error("`"+args[0]+"` is not a valid command");
-			require("../commands/help")(args);
-		}
-	}
+    //vanity commands routed to real commands
+    var vanity_routes = {
+        "--version": "version",
+        "-v": "version"
+    }
 
-	process.title = "hooks";
+    //split off default node args
+    var args = process.argv.slice(2);
 
-	var userArgs = process.argv.slice(2);
-
-	if(userArgs.length==0){
-		require("../commands/help")();
-	}
-	else{
-		run(userArgs);
-	}
+    //if nothing was provided run help
+    if (args.length == 0) {
+        require("../commands/help")();
+    }
+    //run command if it is in the commands array
+    else if (commands.indexOf(args[0]) != -1) {
+        var command = vanity_routes[args[0]] || args[0];
+        require("../commands/" + command)(args.slice(1));
+    }
+    //else show help
+    else {
+        console.error("`" + args[0] + "` is not a valid command");
+        require("../commands/help")(args);
+    }
 
 })();
