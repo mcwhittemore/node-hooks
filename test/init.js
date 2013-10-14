@@ -1,4 +1,4 @@
-describe("[hooks init]", function() {
+describe.only("[hooks init]", function() {
     describe("won't run without a", function() {
 
         before(function(done) {
@@ -6,7 +6,8 @@ describe("[hooks init]", function() {
         });
 
         it(".git folder", function(done) {
-            run("hooks install", function(err, stdout, stderr) {
+            run("hooks init", function(err, stdout, stderr) {
+                stdout.should.not.include("HELP");
                 err.should.have.property("code", 1);
                 stdout.should.include("ERROR:".red + " hooks depends on " + "git".yellow);
                 done();
@@ -14,7 +15,8 @@ describe("[hooks init]", function() {
         });
 
         it(".git/hooks folder", function(done) {
-            run("hooks install", function(err, stdout, stderr) {
+            run("hooks init", function(err, stdout, stderr) {
+                stdout.should.not.include("HELP");
                 err.should.have.property("code", 1);
                 stdout.should.include("ERROR:".red + " hooks depends on " + "git".yellow);
                 done();
@@ -33,7 +35,8 @@ describe("[hooks init]", function() {
         });
 
         it("won't install without a hooks folder", function(done) {
-            run("hooks install --bare", function(err, stdout, stderr) {
+            run("hooks init --bare", function(err, stdout, stderr) {
+                stdout.should.not.include("HELP");
                 err.should.have.property("code", 1);
                 stdout.should.include("ERROR:".red + " hooks depends on " + "git".yellow);
                 stdout.should.include("git init --bare");
@@ -46,7 +49,8 @@ describe("[hooks init]", function() {
                 if (err) {
                     done(err);
                 } else {
-                    run("hooks install --bare", function(err, stdout, stderr) {
+                    run("hooks init --bare", function(err, stdout, stderr) {
+                        stdout.should.not.include("HELP");
                         stdout.should.not.include("ERROR:".red + " hooks depends on " + "git".yellow);
                         done(err);
                     });
