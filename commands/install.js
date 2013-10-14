@@ -104,6 +104,8 @@ var createHooks = function(options) {
         encoding: "utf8"
     });
 
+    baseContent = "#!/usr/bin/env node\n" + baseContent;
+
     //load all the possible hook files
     var possibleHooks = require("../lib/possible-hooks");
     var numHooks = possibleHooks.length;
