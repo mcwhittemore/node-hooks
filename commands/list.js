@@ -1,50 +1,54 @@
 var request = require('request');
 var colors = require("colors");
 
-var main = function(args){
+var main = function(args) {
 
-	var listFile = "https://raw.github.com/mcwhittemore/node-hooks/master/list.json";
+    //the current list file
+    var listFile = "https://raw.github.com/mcwhittemore/node-hooks/master/list.json";
 
-	request(listFile, function (error, response, body) {
-		if (!error && response.statusCode == 200) {
-			try{
-	    		var data = JSON.parse(body);
-	    		showAll(data);
-			}
-			catch(err){
-				console.error("There seems to be an error with the list file. Please report this bug: ", "https://github.com/mcwhittemore/node-hooks/issues?state=open", err);
-			}
-	  	}
-	  	else{
-	  		console.error("There seems to be an error with getting the file from github. Are they down?", listFile);
-	  	}
-	});
+    //get it from github
+    request(listFile, function(error, response, body) {
+        //parse the json if there wasn't an error.
+        if (!error && response.statusCode == 200) {
+            try {
+                var data = JSON.parse(body);
+                //display
+                showAll(data);
+            } catch (err) {
+                console.error("There seems to be an error with the list file. Please report this bug: ", "https://github.com/mcwhittemore/node-hooks/issues?state=open", err);
+            }
+        } else {
+            console.error("There seems to be an error with getting the file from github. Are they down?", listFile);
+        }
+    });
 
 }
 
-var showAll = function(data){
-	process.stdout.write('\u001B[2J\u001B[0;0f');
-	var hook_modules = Object.keys(data);
-	var i = hook_modules.length;
-	while(i--){
-		showOne(hook_modules[i], data[hook_modules[i]]);
-	}
-	console.log(">".blue, "If you do not see a hook here that you want please feel free to build your own:".green);
-	console.log(">".blue, "\t", "https://github.com/mcwhittemore/node-hooks/blob/master/docs/readme.md".yellow);
+//loop through modules and display info
+var showAll = function(data) {
+    process.stdout.write('\u001B[2J\u001B[0;0f');
+    var hook_modules = Object.keys(data);
+    var i = hook_modules.length;
+    while (i--) {
+        showOne(hook_modules[i], data[hook_modules[i]]);
+    }
+    console.log(">".blue, "If you do not see a hook here that you want please feel free to build your own:".green);
+    console.log(">".blue, "\t", "https://github.com/mcwhittemore/node-hooks/blob/master/docs/readme.md".yellow);
 }
 
-var showOne = function(name, data){
-	console.log(">".blue ,name.green);
-	console.log(">".blue ,data.desc.yellow);
-	console.log(">".blue ,"Works with:".yellow);
-	for(var i=0; i<data["valid-for"].length; i++){
-		console.log(">".blue ,"\t", data["valid-for"][i].blue);
-	}
+//display info for a single module
+var showOne = function(name, data) {
+    console.log(">".blue, name.green);
+    console.log(">".blue, data.desc.yellow);
+    console.log(">".blue, "Works with:".yellow);
+    for (var i = 0; i < data["valid-for"].length; i++) {
+        console.log(">".blue, "\t", data["valid-for"][i].blue);
+    }
 
-	var add = data.sources.npm || data.sources.github;
+    var add = data.sources.npm || data.sources.github;
 
-	console.log(">".blue ,"To Add:".yellow, ("hooks add "+add).green);
-	console.log("");
+    console.log(">".blue, "To Add:".yellow, ("hooks add " + add).green);
+    console.log("");
 }
 
 
