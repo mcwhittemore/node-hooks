@@ -1,44 +1,49 @@
 var fs = require("fs");
 var colors = require("colors");
 
-var main = function(args){
-	var hooks = require("../lib/possible-hooks");
-	var numHooks = hooks.length;
+var main = function(args) {
+    var hooks = require("../lib/possible-hooks");
+    var numHooks = hooks.length;
 
-	while(numHooks--){
-		var hook = hooks[numHooks];
+    //do the below actions for each possible git-hook
+    while (numHooks--) {
+        var hook = hooks[numHooks];
 
-		var fileName = "./.git/hooks/"+hook;
+        var fileName = "./.git/hooks/" + hook;
 
-		var action = 0;
+        var action = 0;
 
-		if(fs.existsSync(fileName)){
-			//remove current
-			fs.unlinkSync(fileName);
-			action++;
-		}
+        //if the git-hook file is, remove it
+        if (fs.existsSync(fileName)) {
+            //remove current
+            fs.unlinkSync(fileName);
+            action++; //track actions taken to report correctly at the end.
+        }
 
-		if(fs.existsSync(fileName+".old")){
-			//move old back in
-			fs.renameSync(fileName+".old", fileName);
-			action+=2;
-		}
+        //if there is an archived git-hook move it!
+        if (fs.existsSync(fileName + ".old")) {
+            //move old back in
+            fs.renameSync(fileName + ".old", fileName);
+            action += 2; //track actions taken to report correctly at the end.
+        }
 
-		if(action==1){
-			console.log(hook.blue+" has been removed");
-		}
-		else if(action==2){
-			console.log(hook.blue+" has been restored to its archived version");
-		}
-		else if(action==3){
-			console.log(hook.blue+" has been replaced with its archived version");
-		}
-	}
+        //inform the console on what's been going on
+        //this is bassed on the numeric representation of chmod.
+        //the addition done above, will result in unique ids, that now get logged
+        if (action == 1) {
+            console.log(hook.blue + " has been removed");
+        } else if (action == 2) {
+            console.log(hook.blue + " has been restored to its archived version");
+        } else if (action == 3) {
+            console.log(hook.blue + " has been replaced with its archived version");
+        }
+    }
 
-	if(fs.existsSync("hooks.json")){
-		fs.unlinkSync("hooks.json");
-		console.log("hooks.json".blue+" has been removed");
-	}
+    //remove the hooks.json file
+    if (fs.existsSync("hooks.json")) {
+        fs.unlinkSync("hooks.json");
+        console.log("hooks.json".blue + " has been removed");
+    }
 }
 
 module.exports = main;
