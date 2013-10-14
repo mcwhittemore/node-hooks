@@ -20,10 +20,18 @@ npm install -g node-hooks
 
 ## Use
 
+**When setting up a new project**
+
 ```
 git init
-hooks install
+hooks init
 hooks add new-hook
+```
+
+**Else**
+
+```
+hooks install
 ```
 
 ## View Available Hooks on NPM
@@ -42,9 +50,9 @@ Working on that. See the TODO list below.
 
 ## Commands
 
-### hooks install
+### hooks init
 
-Installs hooks into the current working directory, seeding the required hooks.json and package.json files if needed.
+Inits hooks into the current working directory, seeding the required hooks.json and package.json files if needed. 
 
 It will also add node-hooks to the projects project.json devDependencies and node_modules folder so that all developers on the project will use the same hooks even if they don't have node-hooks installed locally.
 
@@ -53,9 +61,9 @@ It will also add node-hooks to the projects project.json devDependencies and nod
 * --soft: stops install from adding hooks to the package.json devDependencies and node_modules.
 * --bare: updates folder dependency checks to reflect that of a git --bare repo.
 
-### hooks uninstall
+### hooks install
 
-Uninstall hooks from the current working directory. Removes hooks.json, but does not touch package.json or the node_module directory.
+Installs all hook-modules from hooks.json into the current working directory.
 
 ### hooks add {hook-module} [options]
 
@@ -66,6 +74,10 @@ Adds an npm module to the local hooks project if the `hook module's` package.jso
 * --hook {GIT HOOK NAME}: this option overrides the hook-module's default-hook parameter.
 * -f, --force: installs a module from npm even if it doesn't meet the `hooks-module specification`. Requires the --hook option
 * --soft: don't add the module to the package.json
+
+### hooks uninstall
+
+Uninstall hooks from the current working directory. Removes hooks.json, but does not touch package.json or the node_module directory.
 
 ### hooks remove {hook-module} [options]
 
