@@ -1,6 +1,6 @@
 {
   "name": "node-hooks",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "An NPM for git hooks.",
   "main": "./bin/hooks.js",
   "directories": {
@@ -8,15 +8,13 @@
   },
   "dependencies": {
     "colors": "~0.6.1",
-    "request": "~2.27.0",
-    "npm-installer": "0.0.0"
+    "request": "~2.27.0"
   },
   "devDependencies": {
     "mocha": "~1.12.0",
     "should": "1.2.2",
     "beautify.hks": "0.0.1",
-    "esprima.hks": "0.0.0",
-    "node-hooks": "0.0.0"
+    "esprima.hks": "0.0.0"
   },
   "scripts": {
     "test": "mocha",
