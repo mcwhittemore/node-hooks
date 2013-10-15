@@ -26,29 +26,25 @@ var main = function(args) {
         //build out required files 
         create(options);
 
-        if(process.env.SKIP_INSTALL==undefined){ //this is here to provide a way for test to skip this install
+        if (process.env.SKIP_INSTALL == undefined) { //this is here to provide a way for test to skip this install
 
             //thing to all tests to override this install
             var moduleToInstall = process.env.HOOKS_TEST_INSTALL || "node-hooks";
 
-            installer(moduleToInstall, function(err, result){
-                console.log("ERROR MESSAGE", err);
-                console.log("RESULT", result);
-            	if(err){
-            		console.error("HOOKS: ".blue+" Error adding node-hooks to the node_modules folder".red);
-            	}
-            	else if(options.soft){
-                    console.log("HOOKS: ".blue+" Added to node-modules, but not saved to the devDependencies");
-                }
-                else{
+            installer(moduleToInstall, function(err, result) {
+                if (err) {
+                    console.error("HOOKS: ".blue + " Error adding node-hooks to the node_modules folder".red);
+                } else if (options.soft) {
+                    console.log("HOOKS: ".blue + " Added to node-modules, but not saved to the devDependencies");
+                } else {
                     var packageJson = require(packageJsonFile);
                     packageJson.devDependencies = packageJson.devDependencies || {};
                     packageJson.devDependencies["node-hooks"] = result.version;
 
-                    saveJson(packageJsonFile, packageJson, function(){
-            		  console.log("HOOKS: ".blue+" Added to the devDependencies");	
+                    saveJson(packageJsonFile, packageJson, function() {
+                        console.log("HOOKS: ".blue + " Added to the devDependencies");
                     });
-            	}
+                }
             });
         }
     } else {
@@ -86,7 +82,7 @@ var createPackageJson = function(options) {
         options.hasPackageJson = true;
         create(options);
     });
-     
+
 }
 
 //if the cwd doesn't have a hooks.json file start creating one.
@@ -167,7 +163,7 @@ var hasPackageJson = function() {
 
 /** ============================================================================== **/
 
-var saveJson = function(file, json, callback){
+var saveJson = function(file, json, callback) {
     var jsonString = JSON.stringify(json, null, 2) + '\n';
     createFile(file, jsonString, false, callback);
 }
