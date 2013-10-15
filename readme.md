@@ -137,7 +137,8 @@ Remove a modules from the project (hooks remove --all-hooks) and forces a skip i
 * Mapped add to install in the api router.
 * Forced install to route to add if args are provided.
 * Reordered changelog to make it more readable as it grows
-* Changed exec in init to user npm-installer
+* Changed exec in init to use npm-installer
+* Fixed bug in hooks-runner to make spawn not fail when installed in the .git/hooks folder of node-hooks
 
 ### 0.0.14
 
