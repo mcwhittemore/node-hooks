@@ -9,6 +9,7 @@ run = function(command, callback){
 	var hookCommand = "node "+process.cwd()+"/bin/hooks.js ";
 
 	var mods = [
+		["hooks init", "SKIP_INSTALL=true "+hookCommand+" init"],
 		["hooks ", hookCommand],
 		["--all-"+hookCommand, "--all-hooks "],
 		[".git/"+hookCommand, ".git/hooks "],

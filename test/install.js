@@ -27,6 +27,7 @@ describe("[hooks install]", function() {
     describe("should", function() {
 
         before(function(done) {
+            
             setUp(function() {
                 run("mkdir .git", function(e) {
                     run("mkdir .git/hooks", function(ee) {
@@ -69,6 +70,7 @@ describe("[hooks install]", function() {
             });
 
             it.skip("when its not created", function(done) {
+                
                 var hooksJsonPath = test_folder + "/hooks.json";
                 var beforeJson = JSON.stringify({}, null, 2) + '\n';
                 run("hooks init && hooks install", function(err, stdout) {
@@ -79,6 +81,7 @@ describe("[hooks install]", function() {
             });
 
             it.skip("but not when its filled out", function(done) {
+                
                 var hooksJsonPath = test_folder + "/hooks.json";
                 var beforeJson = JSON.stringify({
                     update: []
@@ -105,6 +108,7 @@ describe("[hooks install]", function() {
             });
 
             it.skip("when its not created", function(done) {
+                
                 var packageJsonPath = test_folder + "/package.json";
                 var obj = {
                     name: "default",
@@ -121,6 +125,7 @@ describe("[hooks install]", function() {
             });
 
             it("but not when its filled out", function(done) {
+                
                 var packageJsonPath = test_folder + "/package.json";
                 var obj = {
                     update: [],

@@ -7,7 +7,8 @@ describe("[hooks install hook-module]", function() {
 
     describe("to local folder", function() {
 
-        beforeEach(function(done) {
+        before(function(done) {
+            this.timeout(10000);
             //reset the folder to empty
             cleanUp(function() {
                 setUp(function() {
@@ -20,14 +21,14 @@ describe("[hooks install hook-module]", function() {
 
         describe("with no args", function() {
             it("should work for a local valid module using hooks add", function(done) {
-                this.timeout = 10000;
+                this.timeout(10000);
                 run("hooks add " + local_valid_module, function(err, stdout, stderr) {
                     stdout.should.include("COMPLETE");
                     done(err);
                 });
             });
             it("should work for a local valid module", function(done) {
-                this.timeout = 10000;
+                this.timeout(10000);
                 run("hooks install " + local_valid_module, function(err, stdout, stderr) {
                     stdout.should.include("COMPLETE");
                     done(err);
@@ -46,7 +47,7 @@ describe("[hooks install hook-module]", function() {
                 });
             });
             it("should fail for a github invalid module", function(done) {
-                this.timeout = 10000;
+                this.timeout(10000);
                 run("hooks install " + github_invalid_module, function(err, stdout, stderr) {
                     stdout.should.include("use the `-f` option.");
                     done(err);
@@ -57,7 +58,7 @@ describe("[hooks install hook-module]", function() {
         describe("to specified hook via", function() {
             // * --hook <GIT HOOK NAME>: this option overrides the hook-module's default-hook parameter.
             it("--hook should work", function(done) {
-                this.timeout = 5000;
+                this.timeout(5000);
                 run("hooks install --hook update " + local_valid_module, function(err, stdout, stderr) {
                     stdout.should.include("COMPLETE");
                     var hooksJson = readJson(test_folder + "/hooks.json");
@@ -87,7 +88,7 @@ describe("[hooks install hook-module]", function() {
         describe("and include the module in package.json devDependencies", function() {
             // * --depend: adds the module to the project's package.json devDependencies parameter.
             it("always", function(done) {
-                this.timeout = 5000;
+                this.timeout(5000);
                 run("hooks install " + local_valid_module, function(err) {
                     var json = readJson(test_folder + "/package.json");
                     json.should.have.property("devDependencies");

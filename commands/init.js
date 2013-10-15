@@ -1,10 +1,8 @@
 var fs = require("fs");
+var installer = require("npm-installer");
 var exec = require("child_process").exec;
 var colors = require("colors");
 
-/** =============================== INTERNAL MODULES =============================== **/
-
-var install = require("../lib/install-module");
 
 /** ================================== FILE PATHS ================================== **/
 
@@ -28,21 +26,29 @@ var main = function(args) {
         //build out required files 
         create(options);
 
-        //add hooks to the local package.json and installed into node_modules
-        if (!options.soft && process.env.npm_package_name != "node-hooks") {
-            //this needs to be moved to npm-installer
-            exec("NODE_HOOKS=DO_NOT_INSTALL npm install node-hooks --save-dev", function(err, stdout, stderr) {
-                if (stdout) {
-                    console.log(stdout);
-                }
+        if(process.env.SKIP_INSTALL==undefined){ //this is here to provide a way for test to skip this install
 
-                if (stderr) {
-                    console.error(stderr);
-                }
+            //thing to all tests to override this install
+            var moduleToInstall = process.env.HOOKS_TEST_INSTALL || "node-hooks";
 
-                if (err) {
-                    process.exit(err.code);
+            installer(moduleToInstall, function(err, result){
+                console.log("ERROR MESSAGE", err);
+                console.log("RESULT", result);
+            	if(err){
+            		console.error("HOOKS: ".blue+" Error adding node-hooks to the node_modules folder".red);
+            	}
+            	else if(options.soft){
+                    console.log("HOOKS: ".blue+" Added to node-modules, but not saved to the devDependencies");
                 }
+                else{
+                    var packageJson = require(packageJsonFile);
+                    packageJson.devDependencies = packageJson.devDependencies || {};
+                    packageJson.devDependencies["node-hooks"] = result.version;
+
+                    saveJson(packageJsonFile, packageJson, function(){
+            		  console.log("HOOKS: ".blue+" Added to the devDependencies");	
+                    });
+            	}
             });
         }
     } else {
@@ -76,19 +82,18 @@ var createPackageJson = function(options) {
         name: "default"
     }
 
-    var jsonString = JSON.stringify(packageJson, null, 2) + '\n';
-    createFile(packageJsonFile, jsonString, false, function() {
+    saveJson(packageJsonFile, packageJson, function() {
         options.hasPackageJson = true;
         create(options);
     });
+     
 }
 
 //if the cwd doesn't have a hooks.json file start creating one.
 var createHooksJson = function(options) {
     var defaultHooksJson = {};
 
-    var jsonString = JSON.stringify(defaultHooksJson, null, 2) + '\n';
-    createFile(hooksJsonFile, jsonString, false, function() {
+    saveJson(hooksJsonFile, defaultHooksJson, function() {
         options.hasHooksJson = true;
         create(options);
     });
@@ -161,6 +166,11 @@ var hasPackageJson = function() {
 }
 
 /** ============================================================================== **/
+
+var saveJson = function(file, json, callback){
+    var jsonString = JSON.stringify(json, null, 2) + '\n';
+    createFile(file, jsonString, false, callback);
+}
 
 //used to create files, complex so it can created exicutable files
 var createFile = function(fileName, content, chmodX, callback) {

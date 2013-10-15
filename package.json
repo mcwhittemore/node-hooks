@@ -15,12 +15,13 @@
     "mocha": "~1.12.0",
     "should": "1.2.2",
     "beautify.hks": "0.0.1",
-    "esprima.hks": "0.0.0"
+    "esprima.hks": "0.0.0",
+    "node-hooks": "0.0.0"
   },
   "scripts": {
     "test": "mocha",
-    "postinstall": "node configure.js install",
-    "preuninstall": "node configure.js uninstall"
+    "postinstall": "node ./bin/hooks install",
+    "preuninstall": "node ./bin/hooks uninstall"
   },
   "bin": {
     "hooks": "./bin/hooks.js"

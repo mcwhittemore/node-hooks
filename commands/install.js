@@ -15,7 +15,10 @@ var hooksJsonFile = process.cwd() + "/hooks.json";
 var main = function(args) {
     //load hooks file
 
-    if (args.length != 0) {
+    if(process.env.npm_config_global == "true"){
+        console.log("HOOKS: ".blue+" Will not be added to local folder, as you are installing it globally");
+    }
+    else if (args.length != 0) {
         require("./add.js")(args);
     } else if (fs.existsSync(hooksJsonFile)) {
         installFromHooksJson();
