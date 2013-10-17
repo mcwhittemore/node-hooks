@@ -47,7 +47,7 @@ var showOne = function(name, data) {
 
     var add = data.sources.npm || data.sources.github;
 
-    console.log(">".blue, "To Add:".yellow, ("hooks add " + add).green);
+    console.log(">".blue, "To Install:".yellow, ("hooks install " + add).green);
     console.log("");
 }
 
