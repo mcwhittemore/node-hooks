@@ -26,5 +26,13 @@
 			"npm": "esprima.hks"
 		},
 		"author": "Matthew Chase Whittemore <mcwhittemore@gmail.com>"
+	},
+	"dont-commit-conflicts.hks": {
+		"desc": "Its all in the title really",
+		"valid-for": ["pre-commit"],
+		"sources": {
+			"npm": "dont-commit-conflicts.hks"
+		},
+		"author": "Matthew Chase Whittemore <mcwhittemore@gmail.com>"
 	}
 }
