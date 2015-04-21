@@ -1,8 +1,6 @@
-# Hooks
+# Hooks - NO LONGER SUPPORTED!!!!!!!
 
-An [NPM](https://github.com/isaacs/npm) for git hooks.
-
-![nook-hooks download history](https://nodei.co/npm-dl/node-hooks.png)
+[Please see git-hooks-modules](https://github.com/mcwhittemore/git-hook-modules) if you are interested in a system to help manger git hooks.
 
 ## Terms
 
